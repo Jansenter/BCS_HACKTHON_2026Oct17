@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import L from 'leaflet';
-import { MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from 'react-leaflet';
+import { GeoJSON, MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from 'react-leaflet';
 import { categoryOf, type Artwork } from '../lib/data';
+import { neighbourhoodColor, type Neighbourhood } from '../lib/neighbourhoods';
 import type { LatLon } from '../lib/geo';
 
 export interface MapPoint {
@@ -69,6 +70,27 @@ function InvalidateOnResize() {
   return null;
 }
 
+/** Broad areas render first so smaller neighbourhoods remain clickable on top. */
+function AreaLayer({ area, selected, onSelect }: { area: Neighbourhood; selected: boolean; onSelect?: (name: string) => void }) {
+  const color = neighbourhoodColor(area.properties.name);
+  const style = {
+    color, fillColor: color, weight: selected ? 4 : 2,
+    opacity: selected ? 1 : 0.8, fillOpacity: selected ? 0.25 : 0.08,
+    dashArray: area.properties.approximate ? '6 5' : undefined,
+  };
+  return (
+    <GeoJSON data={area} style={style} bubblingMouseEvents={false} eventHandlers={{
+      click: () => onSelect?.(area.properties.name),
+      mouseover: (event) => { (event.target as L.GeoJSON).setStyle({ weight: 4, fillOpacity: 0.32 }); },
+      mouseout: (event) => { (event.target as L.GeoJSON).setStyle(style); },
+    }}>
+      <Tooltip sticky>
+        <span>{area.properties.name}{area.properties.approximate ? ' (approximate)' : ''}{selected ? ' · selected' : ' · click to explore'}</span>
+      </Tooltip>
+    </GeoJSON>
+  );
+}
+
 export default function ArtMap({
   points,
   mode,
@@ -79,6 +101,9 @@ export default function ArtMap({
   me,
   fitKey,
   focusId,
+  boundary,
+  areas,
+  onAreaSelect,
 }: {
   points: MapPoint[];
   mode: 'tour' | 'explore';
@@ -90,8 +115,21 @@ export default function ArtMap({
   fitKey: string;
   /** Only this id moves the camera (e.g. the open story); activeId just highlights. */
   focusId?: number;
+  boundary?: Neighbourhood;
+  areas?: Neighbourhood[];
+  onAreaSelect?: (name: string) => void;
 }) {
-  const bounds = useMemo(() => points.map((p) => [p.art.lat, p.art.lon] as [number, number]), [points]);
+  const bounds = useMemo(() => {
+    if (boundary) {
+      const b = L.geoJSON(boundary).getBounds();
+      return [[b.getSouth(), b.getWest()], [b.getNorth(), b.getEast()]] as [number, number][];
+    }
+    if (areas?.length) {
+      const b = L.geoJSON(areas).getBounds();
+      return [[b.getSouth(), b.getWest()], [b.getNorth(), b.getEast()]] as [number, number][];
+    }
+    return points.map((p) => [p.art.lat, p.art.lon] as [number, number]);
+  }, [points, boundary, areas]);
   const focus = points.find((p) => p.art.id === focusId)?.art;
 
   return (
@@ -107,6 +145,10 @@ export default function ArtMap({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         maxZoom={20}
       />
+      {areas && [...areas].sort((a, b) => Number(!!a.properties.approximate) - Number(!!b.properties.approximate)).map((area) => (
+        <AreaLayer key={area.properties.name} area={area} selected={area.properties.name === boundary?.properties.name} onSelect={onAreaSelect} />
+      ))}
+      {!areas && boundary && <GeoJSON key={boundary.properties.name} data={boundary} interactive={false} style={{ color: '#0e6e6a', weight: 3, fillOpacity: 0.06, dashArray: boundary.properties.approximate ? '6 5' : undefined }} />}
       <FitBounds points={bounds} fitKey={fitKey} />
       <FlyTo target={focus ? { lat: focus.lat, lon: focus.lon } : undefined} />
       <InvalidateOnResize />

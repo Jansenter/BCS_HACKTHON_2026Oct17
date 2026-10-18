@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
-import { ARTWORKS, CATEGORIES, artistCredit, artworkById, categoryOf, stopFor } from '../lib/data';
+import { useEffect, useMemo, useState } from 'react';
+import { CITY_ARTWORKS, CATEGORIES, artistCredit, artworkById, categoryOf, stopFor } from '../lib/data';
 import { distance, formatDistance } from '../lib/geo';
 import { useGeolocation } from '../lib/route';
+import { NEIGHBOURHOODS, containsArtwork, neighbourhoodColor } from '../lib/neighbourhoods';
 import { navigate } from '../lib/router';
 import { useVisited } from '../lib/storage';
 import ArtMap, { categoryColor } from './ArtMap';
@@ -9,6 +10,11 @@ import Shell, { BackIcon, IconButton, LocateIcon } from './Shell';
 import StoryPanel from './StoryPanel';
 
 export default function ExploreView({ artId }: { artId?: number }) {
+  const [areaName, setAreaName] = useState('');
+  const [findArea, setFindArea] = useState(false);
+  const [areaError, setAreaError] = useState('');
+  const area = NEIGHBOURHOODS.find((n) => n.properties.name === areaName);
+  const areaWorks = useMemo(() => CITY_ARTWORKS.filter((a) => !area || containsArtwork(area, a)), [area]);
   const [query, setQuery] = useState('');
   const [cats, setCats] = useState<string[]>([]);
   const [locate, setLocate] = useState(false);
@@ -17,7 +23,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const list = ARTWORKS.filter((a) => {
+    const list = areaWorks.filter((a) => {
       if (cats.length && !cats.includes(categoryOf(a.type))) return false;
       if (!q) return true;
       return [a.title, a.site, a.address, a.type, a.material, ...a.artists, String(a.year ?? '')]
@@ -25,13 +31,32 @@ export default function ExploreView({ artId }: { artId?: number }) {
         .some((s) => s!.toLowerCase().includes(q));
     });
     return me ? [...list].sort((a, b) => distance(me, a) - distance(me, b)) : [...list].sort((a, b) => a.title.localeCompare(b.title));
-  }, [query, cats, me]);
+  }, [query, cats, me, areaWorks]);
 
   const open = artId ? artworkById(artId) : undefined;
   const ctx = open ? stopFor(open.id) : undefined;
   const go = (id?: number) => navigate({ view: 'explore', art: id });
   const toggleCat = (k: string) => setCats((c) => (c.includes(k) ? c.filter((x) => x !== k) : [...c, k]));
-  const visitedHere = ARTWORKS.filter((a) => visited.includes(a.id)).length;
+  const selectArea = (name: string) => {
+    setAreaName(name);
+    setFindArea(false);
+    setAreaError('');
+    go(undefined);
+  };
+  const visitedHere = areaWorks.filter((a) => visited.includes(a.id)).length;
+
+  useEffect(() => {
+    if (!findArea || !me) return;
+    const local = NEIGHBOURHOODS.find((n) => containsArtwork(n, me));
+    if (local) {
+      setAreaName(local.properties.name);
+      setQuery('');
+      setCats([]);
+      navigate({ view: 'explore' });
+      setAreaError('');
+    } else setAreaError('Your location is outside the available neighbourhoods. Choose an area below.');
+    setFindArea(false);
+  }, [findArea, me]);
 
   const header = (
     <div className="border-b border-line px-4 pb-3 pt-3">
@@ -41,14 +66,32 @@ export default function ExploreView({ artId }: { artId?: number }) {
         </button>
         <div className="flex-1">
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-vermilion">Art map</p>
-          <h1 className="font-display text-[22px] font-semibold leading-tight">Explore Downtown</h1>
+          <h1 className="font-display text-[22px] font-semibold leading-tight">Explore {areaName || 'Vancouver'}</h1>
         </div>
         <p className="text-right text-xs text-ink-3">
-          <span className="font-display text-lg font-semibold text-ink">{visitedHere}</span>/{ARTWORKS.length}
+          <span className="font-display text-lg font-semibold text-ink">{visitedHere}</span>/{areaWorks.length}
           <br />
           visited
         </p>
       </div>
+      <div className="mt-3 flex items-end gap-2">
+        <label className="min-w-0 flex-1 text-xs font-semibold text-ink-3">
+          <span className="flex items-center gap-2">
+            {area && <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: neighbourhoodColor(area.properties.name) }} aria-hidden />}
+            Neighbourhood
+          </span>
+          <select value={areaName} onChange={(e) => selectArea(e.target.value)} className="mt-1 h-10 w-full rounded-xl border border-line bg-card px-3 text-sm text-ink">
+            <option value="">All Vancouver</option>
+            {NEIGHBOURHOODS.map((n) => <option key={n.properties.name} value={n.properties.name}>{n.properties.name}{n.properties.approximate ? ' (approx.)' : ''}</option>)}
+          </select>
+        </label>
+        <button onClick={() => { setLocate(true); setFindArea(true); setAreaError(''); }} className="h-10 rounded-xl border border-line bg-card px-3 text-sm font-semibold" disabled={findArea && !geoError}>
+          {findArea && !geoError ? 'Locating…' : 'My neighbourhood'}
+        </button>
+      </div>
+      <p className="mt-2 text-xs text-ink-3">Click a coloured area on the map to explore its artworks.</p>
+      {area?.properties.approximate && <p className="mt-1 text-xs text-ink-3">Approximate neighbourhood boundary.</p>}
+      {areaError && <p role="status" className="mt-1 text-xs text-ink-3">{areaError}</p>}
       <label className="mt-3 flex items-center gap-2 rounded-full border border-line bg-card px-4 focus-within:border-ink/40">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="text-ink-3" aria-hidden>
           <circle cx="11" cy="11" r="7" />
@@ -114,7 +157,10 @@ export default function ExploreView({ artId }: { artId?: number }) {
     <>
       <ArtMap
         mode="explore"
-        fitKey={`explore-${cats.join(',')}-${query.length > 1 ? query : ''}`}
+        boundary={area}
+        areas={NEIGHBOURHOODS}
+        onAreaSelect={selectArea}
+        fitKey={`explore-${areaName}-${cats.join(',')}-${query}`}
         points={filtered.map((art) => ({ art, visited: isVisited(art.id) }))}
         activeId={open?.id}
         focusId={open?.id}
@@ -122,7 +168,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
         me={me}
       />
       <div className="absolute right-3 top-3 z-[500]">
-        <IconButton label={locate ? 'Stop showing my location' : 'Show my location'} onClick={() => setLocate((v) => !v)}>
+        <IconButton label={locate ? 'Stop showing my location' : 'Show my location'} onClick={() => { setLocate((v) => !v); setFindArea(false); }}>
           <LocateIcon on={locate && !!me} />
         </IconButton>
       </div>

@@ -82,3 +82,11 @@ React 19 · TypeScript · Vite · Tailwind CSS v4 · React Leaflet (OpenStreetMa
 ## Attribution
 
 Contains information licensed under the Open Government Licence – Vancouver. Map data © OpenStreetMap contributors, tiles © CARTO.
+
+## Neighbourhood exploration
+
+Explore opens with all Vancouver neighbourhoods, each with a distinct boundary colour. Hover to see its name, then click to select it; the dropdown and artwork list stay in sync. The selected area has a thicker boundary and stronger fill. Choose a neighbourhood to filter markers and the list by polygon containment, or choose All Vancouver. My neighbourhood requests browser location and selects the containing area. Location requires localhost or HTTPS; manual selection works without location permission.
+
+The 22 local areas use `src/data/local-area-boundary.json`. Yaletown and Gastown use explicitly approximate exploration polygons in `src/lib/neighbourhoods.ts`, not official administrative or heritage boundaries. Small areas take precedence for location detection; Downtown remains available as the broader area.
+
+Additional in-place works are generated separately with `node scripts/build-data.mjs --city` into `src/data/city-artworks.json`. Existing `artworks.json` records take precedence by registry ID, preserving curated data and the existing photo mapping. The original data command and tours are unchanged.

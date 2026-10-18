@@ -11,7 +11,8 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const NEIGHBOURHOOD = 'Downtown';
+const CITY = process.argv.includes('--city');
+const NEIGHBOURHOOD = CITY ? null : 'Downtown';
 
 // The open-data export only carries artist IDs. These names are taken from text
 // that appears inside the registry records themselves (descriptions / statements /
@@ -70,7 +71,7 @@ function clean(text) {
 const raw = JSON.parse(readFileSync(join(root, 'data/public-art.json'), 'utf8'));
 
 const artworks = raw
-  .filter((r) => r.status === 'In place' && r.geo_point_2d && r.geo_local_area === NEIGHBOURHOOD)
+  .filter((r) => r.status === 'In place' && r.geo_point_2d && Number.isFinite(r.geo_point_2d.lat) && Number.isFinite(r.geo_point_2d.lon) && (!NEIGHBOURHOOD || r.geo_local_area === NEIGHBOURHOOD))
   .map((r) => {
     const ids = r.artists ?? [];
     return {
@@ -95,7 +96,7 @@ const artworks = raw
   })
   .sort((a, b) => a.id - b.id);
 
-writeFileSync(join(root, 'src/data/artworks.json'), JSON.stringify(artworks, null, 1));
+writeFileSync(join(root, CITY ? 'src/data/city-artworks.json' : 'src/data/artworks.json'), JSON.stringify(artworks, null, 1));
 
 const named = artworks.filter((a) => a.artists.length).length;
-console.log(`✔ ${artworks.length} artworks in ${NEIGHBOURHOOD} → src/data/artworks.json (${named} with artist names)`);
+console.log(`✔ ${artworks.length} artworks → ${CITY ? 'city-artworks.json' : 'artworks.json'} (${named} with artist names)`);

@@ -1,4 +1,5 @@
 import raw from '../data/artworks.json';
+import cityRaw from '../data/city-artworks.json';
 import { TOURS, type Tour, type TourStop } from '../data/tours';
 
 export interface Artwork {
@@ -22,7 +23,12 @@ export interface Artwork {
 }
 
 export const ARTWORKS = raw as Artwork[];
-const byId = new Map(ARTWORKS.map((a) => [a.id, a]));
+// Existing curated records take priority; never regenerate or replace them for Explore.
+export const CITY_ARTWORKS = [...new Map([
+  ...(cityRaw as Artwork[]).map((a) => [a.id, a] as const),
+  ...ARTWORKS.map((a) => [a.id, a] as const),
+]).values()];
+const byId = new Map(CITY_ARTWORKS.map((a) => [a.id, a]));
 
 export const artworkById = (id: number) => byId.get(id);
 
