@@ -1,8 +1,11 @@
 import { useEffect, useMemo } from 'react';
 import L from 'leaflet';
-import { MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from 'react-leaflet';
+import { GeoJSON, MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from 'react-leaflet';
 import { categoryOf, type Artwork } from '../lib/data';
+import { NEIGHBOURHOODS, neighbourhoodColor, type Neighbourhood } from '../lib/neighbourhoods';
 import type { LatLon } from '../lib/geo';
+
+const CARTO_API_KEY = import.meta.env.VITE_CARTO_API_KEY as string | undefined;
 
 export interface MapPoint {
   art: Artwork;
@@ -69,6 +72,23 @@ function InvalidateOnResize() {
   return null;
 }
 
+function NeighbourhoodLayer({ area }: { area: Neighbourhood }) {
+  const color = neighbourhoodColor(area.properties.name);
+  return (
+    <GeoJSON
+      data={area}
+      style={{ color, fillColor: color, weight: 2, opacity: 0.82, fillOpacity: 0.14 }}
+      bubblingMouseEvents={false}
+      eventHandlers={{
+        mouseover: (event) => (event.target as L.GeoJSON).setStyle({ weight: 3, fillOpacity: 0.24 }),
+        mouseout: (event) => (event.target as L.GeoJSON).setStyle({ weight: 2, fillOpacity: 0.14 }),
+      }}
+    >
+      <Tooltip sticky>{area.properties.name}</Tooltip>
+    </GeoJSON>
+  );
+}
+
 export default function ArtMap({
   points,
   mode,
@@ -91,7 +111,18 @@ export default function ArtMap({
   /** Only this id moves the camera (e.g. the open story); activeId just highlights. */
   focusId?: number;
 }) {
-  const bounds = useMemo(() => points.map((p) => [p.art.lat, p.art.lon] as [number, number]), [points]);
+  const bounds = useMemo(() => {
+    if (mode === 'explore') {
+      const areaBounds = L.geoJSON(NEIGHBOURHOODS).getBounds();
+      if (areaBounds.isValid()) {
+        return [
+          [areaBounds.getSouth(), areaBounds.getWest()],
+          [areaBounds.getNorth(), areaBounds.getEast()],
+        ] as [number, number][];
+      }
+    }
+    return points.map((p) => [p.art.lat, p.art.lon] as [number, number]);
+  }, [mode, points]);
   const focus = points.find((p) => p.art.id === focusId)?.art;
 
   return (
@@ -103,10 +134,14 @@ export default function ArtMap({
       attributionControl
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url={`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${encodeURIComponent(CARTO_API_KEY ?? '')}`}
+        subdomains="abcd"
         maxZoom={20}
       />
+      {mode === 'explore' && NEIGHBOURHOODS.map((area) => (
+        <NeighbourhoodLayer key={area.properties.name} area={area} />
+      ))}
       <FitBounds points={bounds} fitKey={fitKey} />
       <FlyTo target={focus ? { lat: focus.lat, lon: focus.lon } : undefined} />
       <InvalidateOnResize />

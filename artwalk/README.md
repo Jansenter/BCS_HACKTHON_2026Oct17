@@ -11,7 +11,7 @@ npm run build      # typecheck + production build → dist/
 npm run preview    # serve the build
 ```
 
-Node 20+ recommended. No API keys needed.
+Node 20+ recommended. The CARTO Voyager map requires a free [CARTO basemaps API key](https://carto.com/basemaps/apikey/). Copy `.env.example` to `.env` and set `VITE_CARTO_API_KEY` before starting the app. A separate OpenRouteService key is optional for real walking routes.
 
 ## What's in the MVP
 
