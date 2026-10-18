@@ -4,6 +4,7 @@ import { artistCredit, type Artwork } from '../lib/data';
 import { distance, formatDistance, osmDirections, walkMinutes, type LatLon } from '../lib/geo';
 import { speechSupported, toChunks, useNarration } from '../lib/speech';
 import ArtCover from './ArtCover';
+import ArtworkSocial from './ArtworkSocial';
 import Challenge from './Challenge';
 
 interface Props {
@@ -140,6 +141,8 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
               {visited && <span className="rounded-full bg-good/10 px-2.5 py-1 text-good">✓ Visited</span>}
             </div>
           </header>
+
+          <ArtworkSocial key={art.id} art={art} visited={visited} />
 
           {partOf && (
             <a
