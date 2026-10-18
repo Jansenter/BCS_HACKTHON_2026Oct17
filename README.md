@@ -4,9 +4,9 @@
 # Paw 🎨
 ### Discover the stories hidden in your city.
 
-ArtWalk is an interactive public art discovery platform that transforms ordinary walks into meaningful cultural experiences. Explore public art around your city, follow curated walking tours based on your interests, and uncover the stories behind each artwork through accessible text and audio descriptions.
+Paw is an interactive public art discovery platform that transforms ordinary walks into meaningful cultural experiences. Explore public art around your city, follow curated walking tours based on your interests, and uncover the stories behind each artwork through accessible text and audio descriptions.
 
-Whether you're planning a date, exploring with friends, spending time with family, or visiting a new city, ArtWalk helps you experience your surroundings in a whole new way.
+Whether you're planning a date, exploring with friends, spending time with family, or visiting a new city, Paw helps you experience your surroundings in a whole new way.
 
 ## 🌍 The Problem
 
@@ -21,11 +21,11 @@ Discovering public art can be difficult because:
 
 ## 💡 Our Solution
 
-ArtWalk brings public art discovery, guided walking tours, and accessible storytelling into one place.
+Paw brings public art discovery, guided walking tours, and accessible storytelling into one place.
 
 Users can explore a map of public artworks, choose a tour that matches their interests, and learn about each artwork through written descriptions or audio narration.
 
-Instead of simply showing people where art is, ArtWalk helps them understand and experience it.
+Instead of simply showing people where art is, Paw helps them understand and experience it.
 
 ## ✨ Key Features
 
@@ -63,13 +63,13 @@ Make exploring more engaging with optional activities:
 - Discover unexpected artworks along the way.
 
 ### 🤝 Supporting Local Artists and Communities
-ArtWalk helps users discover the people and stories behind public art.
+Paw helps users discover the people and stories behind public art.
 
 Artwork pages can highlight local artists, cultural context, and links to additional resources. Special care is taken to represent culturally significant works accurately and respectfully.
 
 ## ❤️ Social Impact
 
-ArtWalk aims to make culture more accessible, visible, and engaging.
+Paw aims to make culture more accessible, visible, and engaging.
 
 Our intended impact includes:
 
@@ -110,7 +110,7 @@ Our intended impact includes:
 2. Navigate to the project directory:
 
    ```bash
-   cd artwalk
+   cd paw
    ```
 
 3. Install dependencies:
@@ -131,10 +131,10 @@ Our intended impact includes:
 
 ## 🧭 Example User Journey
 
-1. A user opens ArtWalk and explores the public art map.
+1. A user opens Paw and explores the public art map.
 2. They select "Date" as their preferred experience.
 3. They choose a tour that fits their available time.
-4. ArtWalk presents an ordered walking route with several artworks.
+4. Paw presents an ordered walking route with several artworks.
 5. At each stop, the user opens an artwork page and listens to its story or reads the description.
 6. They finish the tour having discovered new artwork, learned about local artists, and experienced their city differently.
 
@@ -149,7 +149,7 @@ For the hackathon prototype, we aim to build:
 - Audio narration or text-to-speech for artwork descriptions.
 - A simple, intuitive interface designed for accessibility.
 
-Future versions could include user-created tours, more cities, verified accessibility information, community contributions, and more advanced route personalisation.
+Future versions could include user-created tours, more cities, verified accessibility information, community contributions, and more advanced route personalization.
 
 ## 🔮 Future Possibilities
 
@@ -161,9 +161,9 @@ Future versions could include user-created tours, more cities, verified accessib
 - Wheelchair-accessible route planning using verified accessibility data.
 - Progress tracking and themed art challenges.
 
-## 👥 Who Is ArtWalk For?
+## 👥 Who Is Paw For?
 
-ArtWalk is for curious locals, tourists, families, friends, couples, solo explorers, and anyone who wants to engage more deeply with public art.
+Paw is for curious locals, tourists, families, friends, couples, solo explorers, and anyone who wants to engage more deeply with public art.
 
 No art expertise required. Just a willingness to explore.
 
@@ -171,7 +171,7 @@ No art expertise required. Just a willingness to explore.
 
 We believe art should be accessible beyond museums and galleries.
 
-By connecting people with the artworks, artists, and stories that surround them, ArtWalk aims to make cities more engaging, inclusive, and culturally connected—one walk at a time.
+By connecting people with the artworks, artists, and stories that surround them, Paw aims to make cities more engaging, inclusive, and culturally connected—one walk at a time.
 
 ---
 
