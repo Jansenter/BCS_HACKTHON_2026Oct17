@@ -18,6 +18,8 @@ const PALETTES: Record<string, [string, string, string, string]> = {
 
 const ARTWORK_PHOTOS: Record<number, string> = {
   24: 'images/angel-of-victory-cordova-chimp-photo-club.jpg',
+  44: 'images/lions.jpg',
+  45: 'images/ed.jpg',
   392: 'images/slidingedge.webp',
   404: 'images/lightshed.jpeg',
   438: 'images/drop.webp',
@@ -25,6 +27,7 @@ const ARTWORK_PHOTOS: Record<number, string> = {
   555: 'images/nike.JPG',
   559: 'images/gurunanak.jpg',
   755: 'images/caption.jpg',
+  865: 'images/weekendchime.jpeg',
 };
 
 function rng(seed: number) {
