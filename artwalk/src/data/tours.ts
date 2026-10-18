@@ -15,6 +15,9 @@ export interface Tour {
   tagline: string;
   theme: string;
   minutes: number;
+  /** Approximate mean of representative Walk Score location ratings for neighbourhoods touched. */
+  walkScore: number;
+  walkScoreAreas: string[];
   accent: string; // hex
   accentSoft: string;
   stops: TourStop[];
@@ -27,6 +30,8 @@ export const TOURS: Tour[] = [
     tagline: 'Chrome, raindrops and pixel whales along Coal Harbour',
     theme: 'Contemporary sculpture & memory by the water',
     minutes: 60,
+    walkScore: 97,
+    walkScoreAreas: ['Downtown Vancouver (99)', 'Gastown (98)', 'Coal Harbour (94)'],
     accent: '#0E6E6A',
     accentSoft: '#D6EBE8',
     stops: [
@@ -81,6 +86,8 @@ export const TOURS: Tour[] = [
     tagline: 'Lions, fountains and a century of civic memory',
     theme: 'Monuments, relief & the stories behind them',
     minutes: 50,
+    walkScore: 99,
+    walkScoreAreas: ['Downtown Vancouver (99)', 'Gastown (98)'],
     accent: '#A4461B',
     accentSoft: '#F4E1D4',
     stops: [

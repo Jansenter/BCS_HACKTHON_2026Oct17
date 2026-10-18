@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { TOURS, type Tour } from '../data/tours';
 import { formatDistance } from '../lib/geo';
 import { navigate } from '../lib/router';
+import { useLanguage } from '../lib/language';
 
 export default function Completion({
   tour,
@@ -18,6 +19,7 @@ export default function Completion({
   challengesRight: number;
   onClose: () => void;
 }) {
+  const { t, language } = useLanguage();
   const other = TOURS.find((t) => t.id !== tour.id);
   const [copied, setCopied] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -51,20 +53,20 @@ export default function Completion({
             <circle cx="48" cy="48" r="34" fill="#fffdf8" />
             <path d="M33 49l10 10 20-22" fill="none" stroke={tour.accent} strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <p className="mt-3 text-xs font-bold uppercase tracking-[0.18em] text-white/80">Walk complete</p>
+          <p className="mt-3 text-xs font-bold uppercase tracking-[0.18em] text-white/80">{t('Walk complete')}</p>
           <h2 id="done-title" className="mt-1 text-center font-display text-3xl font-semibold leading-tight">
             {tour.title}
           </h2>
         </div>
         <div className="grid grid-cols-3 divide-x divide-line border-b border-line text-center">
-          <Stat value={String(stops)} label="artworks" />
-          <Stat value={formatDistance(metres)} label="walked" />
-          <Stat value={challengesDone ? `${challengesRight}/${challengesDone}` : '—'} label="challenges" />
+          <Stat value={String(stops)} label={t('artworks')} />
+          <Stat value={formatDistance(metres)} label={language === 'zh' ? '步行' : t('walked')} />
+          <Stat value={challengesDone ? `${challengesRight}/${challengesDone}` : '—'} label={t('challenges')} />
         </div>
         <div className="space-y-2 p-5">
           <p className="pb-2 text-center text-sm text-ink-2">You’ve discovered the stories hidden in your city. Thanks for looking closer.</p>
           <button onClick={share} className="h-12 w-full rounded-full bg-ink font-semibold text-paper">
-            {copied ? 'Copied to clipboard ✓' : 'Share your walk'}
+            {copied ? (language === 'zh' ? '已复制 ✓' : language === 'fr' ? 'Copié ✓' : 'Copied to clipboard ✓') : t('Share your walk')}
           </button>
           {other && (
             <button
@@ -74,11 +76,11 @@ export default function Completion({
               }}
               className="h-12 w-full rounded-full border border-line font-semibold"
             >
-              Try “{other.title}” next
+              {language === 'zh' ? `接下来尝试“${other.title}”` : language === 'fr' ? `Essayez « ${other.title} » ensuite` : `Try “${other.title}” next`}
             </button>
           )}
           <button ref={closeRef} onClick={onClose} className="h-10 w-full text-sm font-semibold text-ink-3">
-            Close
+            {t('Close')}
           </button>
         </div>
       </div>

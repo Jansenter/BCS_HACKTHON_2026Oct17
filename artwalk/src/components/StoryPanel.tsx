@@ -5,6 +5,7 @@ import { distance, formatDistance, osmDirections, walkMinutes, type LatLon } fro
 import { speechSupported, toChunks, useNarration } from '../lib/speech';
 import ArtCover from './ArtCover';
 import Challenge from './Challenge';
+import { useLanguage, useTranslatedTexts } from '../lib/language';
 
 interface Props {
   art: Artwork;
@@ -26,6 +27,10 @@ interface Props {
 const RATES = [0.85, 1, 1.2];
 
 export default function StoryPanel({ art, tour, stop, index, total, prev, next, visited, me, onToggleVisited, onClose, onGo, partOf }: Props) {
+  const { t, language } = useLanguage();
+  const registryText = useTranslatedTexts([art.description ?? '', art.statement && art.statement !== art.description ? art.statement : '']);
+  const description = art.description ? registryText.values[0] ?? art.description : undefined;
+  const statement = art.statement && art.statement !== art.description ? registryText.values[art.description ? 1 : 0] ?? art.statement : undefined;
   const accent = tour?.accent ?? '#e2512f';
   const credit = artistCredit(art, stop);
 
@@ -39,11 +44,10 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
       .filter(Boolean)
       .join(' ');
     const list: { label: string; chunks: string[] }[] = [{ label: '', chunks: toChunks(intro) }];
-    if (art.description) list.push({ label: 'About the work', chunks: toChunks(art.description) });
-    if (art.statement && art.statement !== art.description)
-      list.push({ label: 'From the project statement', chunks: toChunks(art.statement) });
+    if (description) list.push({ label: 'About the work', chunks: toChunks(description) });
+    if (statement) list.push({ label: 'From the project statement', chunks: toChunks(statement) });
     return list;
-  }, [art, credit.name, credit.source]);
+  }, [art, credit.name, credit.source, description, statement]);
 
   const allChunks = useMemo(() => sections.flatMap((s) => s.chunks), [sections]);
   const narration = useNarration(allChunks);
@@ -60,7 +64,7 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
     <article className="relative flex h-full flex-col bg-paper" aria-label={`Story: ${art.title}`}>
       {/* Top bar */}
       <div className="flex items-center gap-2 border-b border-line bg-paper/95 px-3 py-2 backdrop-blur">
-        <button onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full hover:bg-paper-2" aria-label="Close story">
+        <button onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full hover:bg-paper-2" aria-label={t('Close story')}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
             <path d="M15 18l-6-6 6-6" />
           </svg>
@@ -76,7 +80,7 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
               </p>
             </>
           ) : (
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-3">Explore Downtown</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-3">{t('Explore Downtown')}</p>
           )}
         </div>
         {tour && (
@@ -119,7 +123,7 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
             rel="noreferrer"
             className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold text-ink shadow-sm hover:bg-white"
           >
-            See photos on City registry ↗
+            {t('See photos on City registry ↗')}
           </a>
         </div>
 
@@ -157,16 +161,16 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
           <section className="rounded-2xl bg-paper-2/70 p-4 text-sm">
             <p className="font-semibold">{art.site ?? art.address ?? 'Downtown Vancouver'}</p>
             {art.address && art.site && <p className="text-ink-2">{art.address}</p>}
-            {art.locationOnSite && <p className="mt-1 text-ink-3">Look for it: {art.locationOnSite}</p>}
+            {art.locationOnSite && <p className="mt-1 text-ink-3">{t('Look for it:')} {art.locationOnSite}</p>}
             <div className="mt-3 flex flex-wrap items-center gap-3">
               {from && (
                 <a href={osmDirections(from, art)} target="_blank" rel="noreferrer" className="font-semibold underline decoration-2 underline-offset-4" style={{ textDecorationColor: accent }}>
-                  Walking directions ↗
+                  {t('Walking directions ↗')}
                 </a>
               )}
               {dist !== null && (
                 <span className="text-ink-2">
-                  {nearby ? 'You’re here!' : `${formatDistance(dist)} away · ~${walkMinutes(dist * 1.3)} min`}
+                  {nearby ? t('You’re here!') : `${formatDistance(dist)} ${language === 'fr' ? 'à · env.' : language === 'zh' ? '距离 · 约' : 'away · ~'} ${walkMinutes(dist * 1.3)} min`}
                 </span>
               )}
             </div>
@@ -217,7 +221,7 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
                 if (si === 0) return null; // intro is already the header
                 return (
                   <div key={si} className="mb-4">
-                    <h3 className="mb-1.5 text-xs font-bold uppercase tracking-[0.14em] text-ink-3">{sec.label}</h3>
+                    <h3 className="mb-1.5 text-xs font-bold uppercase tracking-[0.14em] text-ink-3">{t(sec.label)}</h3>
                     <p className="text-[16px] leading-[1.7] text-ink">
                       {sec.chunks.map((c, ci) => {
                         const gi = start + ci;
@@ -240,6 +244,7 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
               {sections.length === 1 && (
                 <p className="text-[15px] text-ink-3">The registry doesn’t include a written description for this work yet. Visit it and tell its story your own way.</p>
               )}
+              {registryText.loading && <p className="mt-2 text-xs text-ink-3" role="status">{language === 'zh' ? '正在翻译登记说明…' : 'Traduction de la description…'}</p>}
               {!showAll && longText && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-paper to-transparent" />}
             </div>
             {longText && (
@@ -293,7 +298,7 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
               visited ? 'border border-good/40 bg-good/10 text-good' : nearby ? 'bg-good text-white' : 'bg-ink text-paper'
             }`}
           >
-            {visited ? '✓ Visited — tap to undo' : nearby ? 'You’re here — mark visited' : 'Mark as visited'}
+            {visited ? `✓ ${t('Visited')} — ${language === 'fr' ? 'touchez pour annuler' : language === 'zh' ? '点击撤销' : 'tap to undo'}` : nearby ? `${t('You’re here!')} — ${t('Mark as visited')}` : t('Mark as visited')}
           </button>
           {tour && next && visited && (
             <button onClick={() => onGo(next.id)} className="pop h-12 rounded-full px-5 font-semibold text-white" style={{ background: accent }}>

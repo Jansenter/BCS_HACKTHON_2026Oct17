@@ -35,8 +35,7 @@ body {
 
 /* Subtle paper grain so the background isn't flat */
 .grain {
-  background-image: radial-gradient(rgb(28 26 23 / 0.045) 1px, transparent 1px);
-  background-size: 4px 4px;
+  background: #f1ece0;
 }
 
 .wander-link {
@@ -61,7 +60,7 @@ body {
 .hero-slideshow-images {
   position: absolute;
   z-index: -2;
-  top: -3.75rem;
+  top: -4rem;
   bottom: 0;
   left: 50%;
   width: 100vw;
@@ -77,7 +76,7 @@ body {
 .hero-slideshow::before {
   position: absolute;
   z-index: -3;
-  top: -3.75rem;
+  top: -4rem;
   right: 50%;
   bottom: 0;
   width: 100vw;
@@ -237,6 +236,20 @@ body {
   height: 22px;
   margin: -4px;
   outline: 3px solid rgb(226 81 47 / 0.35);
+}
+.aw-route-dot {
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border: 3px solid var(--route-color);
+  border-radius: 999px;
+  background: #fffdf8;
+  box-shadow: 0 1px 5px rgb(28 26 23 / 0.4);
+}
+.aw-route-dot.is-active {
+  width: 22px;
+  height: 22px;
+  margin: -2px;
 }
 .aw-me {
   width: 18px;

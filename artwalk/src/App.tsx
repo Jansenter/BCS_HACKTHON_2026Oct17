@@ -4,6 +4,7 @@ import Home from './components/Home';
 import TourView from './components/TourView';
 import { tourById } from './data/tours';
 import { useRoute } from './lib/router';
+import { LanguageProvider } from './lib/language';
 
 export default function App() {
   const route = useRoute();
@@ -13,10 +14,7 @@ export default function App() {
     if (route.view === 'home') window.scrollTo(0, 0);
   }, [route.view]);
 
-  if (route.view === 'tour') {
-    const tour = tourById(route.tourId);
-    if (tour) return <TourView tour={tour} artId={route.art} />;
-  }
-  if (route.view === 'explore') return <ExploreView artId={route.art} />;
-  return <Home />;
+  return <LanguageProvider>
+    {route.view === 'tour' && tourById(route.tourId) ? <TourView tour={tourById(route.tourId)!} artId={route.art} /> : route.view === 'explore' ? <ExploreView artId={route.art} /> : <Home />}
+  </LanguageProvider>;
 }

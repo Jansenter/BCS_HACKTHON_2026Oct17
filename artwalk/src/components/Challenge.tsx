@@ -2,10 +2,17 @@ import { useState } from 'react';
 import type { Artwork } from '../lib/data';
 import { triviaFor } from '../lib/challenge';
 import { useChallenges } from '../lib/storage';
+import { useLanguage, useTranslatedTexts } from '../lib/language';
 
 /** Stretch feature: an observation prompt + one fact-based question from the registry record. */
 export default function Challenge({ art, prompt, accent }: { art: Artwork; prompt?: string; accent: string }) {
+  const { t } = useLanguage();
   const trivia = triviaFor(art);
+  const quizCopy = useTranslatedTexts([prompt ?? '', trivia?.question ?? '', ...(trivia?.options ?? []), trivia?.source ?? '']);
+  const hasPrompt = !!prompt;
+  const questionIndex = hasPrompt ? 1 : 0;
+  const optionsIndex = questionIndex + (trivia ? 1 : 0);
+  const sourceIndex = optionsIndex + (trivia?.options.length ?? 0);
   const { answers, record } = useChallenges();
   const lookKey = `look-${art.id}`;
   const answered = trivia ? answers[trivia.key] : undefined;
@@ -20,28 +27,28 @@ export default function Challenge({ art, prompt, accent }: { art: Artwork; promp
           ◎
         </span>
         <h3 id={`ch-${art.id}`} className="font-display text-lg font-semibold">
-          Look closer
+          {t('Look closer')}
         </h3>
       </div>
 
       {prompt && (
         <div className="mb-4">
-          <p className="text-[15px] leading-relaxed text-ink-2">{prompt}</p>
+          <p className="text-[15px] leading-relaxed text-ink-2">{quizCopy.values[0] ?? prompt}</p>
           <button
             onClick={() => record(lookKey, true)}
             disabled={answers[lookKey]}
             className="mt-3 rounded-full border border-ink/15 px-4 py-2 text-sm font-semibold transition hover:bg-paper-2 disabled:cursor-default disabled:border-transparent disabled:bg-good/10 disabled:text-good"
           >
-            {answers[lookKey] ? '✓ Spotted it' : 'I spotted it'}
+            {answers[lookKey] ? `✓ ${t('Spotted it')}` : t('I spotted it')}
           </button>
         </div>
       )}
 
       {trivia && (
         <div className={prompt ? 'border-t border-line pt-4' : ''}>
-          <p className="mb-3 text-[15px] font-semibold">{trivia.question}</p>
+          <p className="mb-3 text-[15px] font-semibold">{quizCopy.values[questionIndex] ?? trivia.question}</p>
           <div className="grid grid-cols-2 gap-2" role="group" aria-label="Answer options">
-            {trivia.options.map((opt) => {
+            {trivia.options.map((opt, optionIndex) => {
               const isAnswer = opt === trivia.answer;
               const done = answered !== undefined;
               const chosen = picked === opt;
@@ -59,15 +66,15 @@ export default function Challenge({ art, prompt, accent }: { art: Artwork; promp
                   }}
                   className={`min-h-11 rounded-xl border px-3 py-2 text-left text-sm font-medium transition ${style}`}
                 >
-                  {opt}
+                  {quizCopy.values[optionsIndex + optionIndex] ?? opt}
                 </button>
               );
             })}
           </div>
           {answered !== undefined && (
             <p className="rise mt-3 text-sm text-ink-2" role="status">
-              <strong className={answered ? 'text-good' : 'text-vermilion-dark'}>{answered ? 'Nice eye!' : 'Not quite.'}</strong>{' '}
-              The answer is <strong>{trivia.answer}</strong>. <span className="text-ink-3">{trivia.source}</span>
+              <strong className={answered ? 'text-good' : 'text-vermilion-dark'}>{answered ? t('Nice eye!') : t('Not quite.')}</strong>{' '}
+              {t('The answer is')} <strong>{quizCopy.values[optionsIndex + trivia.options.indexOf(trivia.answer)] ?? trivia.answer}</strong>. <span className="text-ink-3">{quizCopy.values[sourceIndex] ?? trivia.source}</span>
             </p>
           )}
         </div>

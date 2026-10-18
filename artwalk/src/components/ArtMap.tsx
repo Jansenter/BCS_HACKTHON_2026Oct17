@@ -13,6 +13,13 @@ export interface MapPoint {
   visited?: boolean;
 }
 
+export interface WalkPath {
+  id: string;
+  color: string;
+  stopIds: number[];
+  positions: [number, number][];
+}
+
 const CAT_COLORS: Record<string, string> = {
   sculpture: '#e2512f',
   site: '#0e6e6a',
@@ -38,6 +45,14 @@ function dotIcon(color: string, active: boolean, visited: boolean) {
     iconSize: [14, 14],
     iconAnchor: [7, 7],
     html: `<div class="aw-dot ${active ? 'is-active' : ''}" style="background:${color};${visited ? 'box-shadow:0 0 0 3px #2f7d4f' : ''}"></div>`,
+  });
+}
+function walkDotIcon(color: string, active: boolean) {
+  return L.divIcon({
+    className: '',
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+    html: `<div class="aw-route-dot ${active ? 'is-active' : ''}" style="--route-color:${color};${active ? `box-shadow:0 0 0 4px ${color}33,0 1px 5px rgb(28 26 23 / 0.4)` : ''}"></div>`,
   });
 }
 const meIcon = L.divIcon({ className: '', iconSize: [18, 18], iconAnchor: [9, 9], html: '<div class="aw-me"></div>' });
@@ -95,6 +110,8 @@ export default function ArtMap({
   activeId,
   onSelect,
   path,
+  walkPaths,
+  fitPositions,
   accent = '#e2512f',
   me,
   fitKey,
@@ -105,6 +122,8 @@ export default function ArtMap({
   activeId?: number;
   onSelect: (id: number) => void;
   path?: [number, number][];
+  walkPaths?: WalkPath[];
+  fitPositions?: [number, number][];
   accent?: string;
   me?: LatLon | null;
   fitKey: string;
@@ -112,6 +131,7 @@ export default function ArtMap({
   focusId?: number;
 }) {
   const bounds = useMemo(() => {
+    if (mode === 'explore' && fitPositions?.length) return fitPositions;
     if (mode === 'explore') {
       const areaBounds = L.geoJSON(NEIGHBOURHOODS).getBounds();
       if (areaBounds.isValid()) {
@@ -122,7 +142,7 @@ export default function ArtMap({
       }
     }
     return points.map((p) => [p.art.lat, p.art.lon] as [number, number]);
-  }, [mode, points]);
+  }, [mode, points, fitPositions]);
   const focus = points.find((p) => p.art.id === focusId)?.art;
 
   return (
@@ -152,17 +172,28 @@ export default function ArtMap({
           <Polyline positions={path} pathOptions={{ color: accent, weight: 4, dashArray: '2 9', lineCap: 'round' }} />
         </>
       )}
+      {mode === 'explore' && walkPaths?.map((walk) => (
+        walk.positions.length > 1 && (
+          <Polyline
+            key={walk.id}
+            positions={walk.positions}
+            pathOptions={{ color: walk.color, weight: 5, opacity: 0.9, lineCap: 'round', lineJoin: 'round' }}
+            bubblingMouseEvents={false}
+          />
+        )
+      ))}
 
       {points.map(({ art, label, visited }) => (
         <Marker
           key={art.id}
           position={[art.lat, art.lon]}
           zIndexOffset={art.id === activeId ? 1000 : 0}
-          icon={
-            mode === 'tour'
-              ? pinIcon(label ?? '•', accent, art.id === activeId, !!visited)
-              : dotIcon(categoryColor(art.type), art.id === activeId, !!visited)
-          }
+          icon={mode === 'tour'
+            ? pinIcon(label ?? '•', accent, art.id === activeId, !!visited)
+            : (() => {
+                const walkColor = walkPaths?.find((walk) => walk.stopIds.includes(art.id))?.color;
+                return walkColor ? walkDotIcon(walkColor, art.id === activeId) : dotIcon(categoryColor(art.type), art.id === activeId, !!visited);
+              })()}
           eventHandlers={{ click: () => onSelect(art.id) }}
           keyboard
           title={art.title}

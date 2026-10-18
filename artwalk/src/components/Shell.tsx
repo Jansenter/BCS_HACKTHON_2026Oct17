@@ -1,4 +1,16 @@
 import type { ReactNode } from 'react';
+import { useLanguage, type Language } from '../lib/language';
+
+export function LanguageButton() {
+  const { language, setLanguage, t } = useLanguage();
+  const options: { value: Language; label: string }[] = [{ value: 'zh', label: '中文' }, { value: 'fr', label: 'Français' }, { value: 'en', label: 'English' }];
+  return <div className="relative">
+    <label className="sr-only" htmlFor="language-picker">{t('Change language')}</label>
+    <select id="language-picker" value={language} onChange={(event) => setLanguage(event.target.value as Language)} aria-label={t('Change language')} title={t('Change language')} className="h-11 rounded-full border-0 bg-card px-3 text-sm font-semibold text-ink shadow-[0_2px_10px_rgb(28_26_23/0.18)]">
+      {options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+    </select>
+  </div>;
+}
 
 /**
  * Responsive map + panel layout.
