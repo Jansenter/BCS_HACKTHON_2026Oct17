@@ -6,6 +6,7 @@ import { useGeolocation, useWalkRoute } from '../lib/route';
 import { navigate } from '../lib/router';
 import { useChallenges, useVisited } from '../lib/storage';
 import ArtCover from './ArtCover';
+import type { NearbySelection } from '../lib/nearby';
 import ArtMap from './ArtMap';
 import Completion from './Completion';
 import Shell, { BackIcon, IconButton, LocateIcon } from './Shell';
@@ -15,9 +16,10 @@ export default function TourView({ tour, artId }: { tour: Tour; artId?: number }
   const stops = useMemo(() => tourStops(tour), [tour]);
   const { isVisited, toggle, reset } = useVisited();
   const { answers } = useChallenges();
+  const [nearby, setNearby] = useState<NearbySelection>({ artworkId: 0, places: [] });
   const [locate, setLocate] = useState(false);
   const { pos: me, error: geoError } = useGeolocation(locate);
-  const route = useWalkRoute(tour.id, stops.map((s) => s.art));
+  const route = useWalkRoute(`${tour.id}:${stops.map((s) => s.art.id).join('-')}`, stops.map((s) => s.art));
 
   const done = stops.filter((s) => isVisited(s.art.id)).length;
   const complete = done === stops.length;
@@ -43,7 +45,7 @@ export default function TourView({ tour, artId }: { tour: Tour; artId?: number }
   const header = (
     <div className="border-b border-line px-4 pb-3 pt-3">
       <div className="flex items-center gap-2">
-        <button onClick={() => navigate({ view: 'home' })} className="-ml-2 grid h-10 w-10 place-items-center rounded-full hover:bg-paper-2" aria-label="Back to tours">
+        <button onClick={() => navigate({ view: tour.id.startsWith('personal-') ? 'profile' : 'home' })} className="-ml-2 grid h-10 w-10 place-items-center rounded-full hover:bg-paper-2" aria-label={tour.id.startsWith('personal-') ? 'Back to my walks' : 'Back to tours'}>
           <BackIcon />
         </button>
         <div className="min-w-0 flex-1">
@@ -138,6 +140,8 @@ export default function TourView({ tour, artId }: { tour: Tour; artId?: number }
   const map = (
     <>
       <ArtMap
+        nearby={nearby.artworkId === artId ? nearby : undefined}
+        onNearbySelect={(id) => setNearby((current) => ({ ...current, selectedId: id }))}
         mode="tour"
         fitKey={tour.id}
         accent={tour.accent}
@@ -161,6 +165,8 @@ export default function TourView({ tour, artId }: { tour: Tour; artId?: number }
 
   const story = open && (
     <StoryPanel
+      nearby={nearby.artworkId === artId ? nearby : undefined}
+      onNearbyChange={setNearby}
       key={open.art.id}
       art={open.art}
       tour={tour}

@@ -20,7 +20,8 @@ export default function Home() {
             <span className="font-display text-xl font-semibold tracking-tight">ArtWalk</span>
           </a>
           <div className="flex items-center gap-2">
-            <span className="rounded-full border border-line bg-card px-3 py-1.5 text-xs font-semibold">📍 Downtown Vancouver</span>
+            <a href={href({ view: 'profile' })} className="rounded-full border border-line bg-card px-3 py-2 text-xs font-semibold">My ArtWalk</a>
+            <span className="hidden rounded-full border border-line bg-card px-3 py-1.5 text-xs font-semibold sm:inline">📍 Downtown Vancouver</span>
             <button
               type="button"
               onClick={() => setDarkMode((enabled) => !enabled)}

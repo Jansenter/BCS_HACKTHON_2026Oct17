@@ -6,9 +6,15 @@ import { distance, formatDistance, osmDirections, walkMinutes, type LatLon } fro
 import { speechSupported, toChunks, useNarration } from '../lib/speech';
 import ArtCover from './ArtCover';
 import ArtworkSocial from './ArtworkSocial';
+import NearbyPlaces from './NearbyPlaces';
+import type { NearbySelection } from '../lib/nearby';
 import Challenge from './Challenge';
+import { useCollection, useProfile } from '../lib/profile';
+import { href } from '../lib/router';
 
 interface Props {
+  nearby?: NearbySelection;
+  onNearbyChange: (selection: NearbySelection) => void;
   art: Artwork;
   tour?: Tour;
   stop?: TourStop;
@@ -27,7 +33,9 @@ interface Props {
 
 const RATES = [0.85, 1, 1.2];
 
-export default function StoryPanel({ art, tour, stop, index, total, prev, next, visited, me, onToggleVisited, onClose, onGo, partOf }: Props) {
+export default function StoryPanel({ art, tour, stop, index, total, prev, next, visited, me, onToggleVisited, onClose, onGo, partOf, nearby: nearbyPlaces, onNearbyChange }: Props) {
+  const [profile] = useProfile();
+  const collection = useCollection();
   const accent = tour?.accent ?? '#e2512f';
   const credit = artistCredit(art, stop);
   const artists = artistsFor(art);
@@ -144,6 +152,10 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
             </div>
           </header>
 
+          <div className="my-3 flex flex-wrap items-center gap-3">
+            {profile.name ? <button onClick={() => collection.toggle(art.id)} aria-pressed={collection.ids.includes(art.id)} className="min-h-11 rounded-full border border-line bg-paper px-4 py-2 text-sm font-semibold">{collection.ids.includes(art.id) ? '♥ Saved to collection' : '♡ Save to collection'}</button> : <a href={href({ view: 'profile' })} className="min-h-11 rounded-full border border-line px-4 py-2 text-sm font-semibold">Create a profile to save this piece →</a>}
+            {profile.name && <a className="text-sm font-semibold underline" href={href({ view: 'profile' })}>My collection & walks →</a>}
+          </div>
           <ArtworkSocial key={art.id} art={art} visited={visited} />
 
           {partOf && (
@@ -176,6 +188,8 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
               )}
             </div>
           </section>
+
+          <NearbyPlaces key={`nearby-${art.id}`} art={art} nearby={nearbyPlaces} onNearbyChange={onNearbyChange} />
 
           {/* Listen */}
           <section aria-labelledby={`listen-${art.id}`}>

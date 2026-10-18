@@ -4,8 +4,9 @@ import { ARTWORK_TAGS, matchesArtworkTags, type ArtworkTag } from '../lib/artwor
 import { distance, formatDistance } from '../lib/geo';
 import { useGeolocation } from '../lib/route';
 import { NEIGHBOURHOODS, containsArtwork, neighbourhoodColor } from '../lib/neighbourhoods';
-import { navigate } from '../lib/router';
+import { href, navigate } from '../lib/router';
 import { useVisited } from '../lib/storage';
+import type { NearbySelection } from '../lib/nearby';
 import ArtMap, { categoryColor } from './ArtMap';
 import Shell, { BackIcon, IconButton, LocateIcon } from './Shell';
 import StoryPanel from './StoryPanel';
@@ -19,6 +20,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
   const [query, setQuery] = useState('');
   const [tags, setTags] = useState<ArtworkTag[]>([]);
   const [cats, setCats] = useState<string[]>([]);
+  const [nearby, setNearby] = useState<NearbySelection>({ artworkId: 0, places: [] });
   const [locate, setLocate] = useState(false);
   const { pos: me, error: geoError } = useGeolocation(locate);
   const { isVisited, toggle, visited } = useVisited();
@@ -72,6 +74,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-vermilion">Art map</p>
           <h1 className="font-display text-[22px] font-semibold leading-tight">Explore {areaName || 'Vancouver'}</h1>
         </div>
+        <a className="rounded-full border border-line px-3 py-2 text-xs font-semibold" href={href({ view: 'profile' })}>My ArtWalk</a>
         <p className="text-right text-xs text-ink-3">
           <span className="font-display text-lg font-semibold text-ink">{visitedHere}</span>/{areaWorks.length}
           <br />
@@ -172,6 +175,8 @@ export default function ExploreView({ artId }: { artId?: number }) {
   const map = (
     <>
       <ArtMap
+        nearby={nearby.artworkId === artId ? nearby : undefined}
+        onNearbySelect={(id) => setNearby((current) => ({ ...current, selectedId: id }))}
         mode="explore"
         boundary={area}
         areas={NEIGHBOURHOODS}
@@ -194,6 +199,8 @@ export default function ExploreView({ artId }: { artId?: number }) {
 
   const story = open && (
     <StoryPanel
+      nearby={nearby.artworkId === artId ? nearby : undefined}
+      onNearbyChange={setNearby}
       key={open.id}
       art={open}
       stop={ctx?.stop}
