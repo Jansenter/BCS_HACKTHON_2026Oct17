@@ -1,6 +1,3 @@
-# BCS_HACKTHON_2026Oct17
-
-
 # Paw 🎨
 ### Discover the stories hidden in your city.
 
