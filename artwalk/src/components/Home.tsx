@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { TOURS } from '../data/tours';
 import { ARTWORKS, tourStops } from '../lib/data';
 import { formatDistance, walkingEstimate } from '../lib/geo';
-import { href } from '../lib/router';
+import { href, navigate } from '../lib/router';
 import { useVisited } from '../lib/storage';
 import ArtCover from './ArtCover';
+import ArtMap from './ArtMap';
 import CommunityHub from './CommunityHub';
 
 const HERO_IMAGES = [
@@ -18,6 +19,8 @@ export default function Home() {
   const { isVisited, visited } = useVisited();
   const [heroImageIndex, setHeroImageIndex] = useState(0);
   const totalVisited = ARTWORKS.filter((a) => visited.includes(a.id)).length;
+  const previewTour = TOURS[0];
+  const previewStops = tourStops(previewTour);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -172,10 +175,24 @@ export default function Home() {
             ['02', 'Listen as you arrive', 'Every stop has a narrated story with a readable transcript.'],
             ['03', 'Look closer', 'Spot details, answer a question, and collect each stop.'],
           ].map(([n, t, d]) => (
-            <div key={n} className="border-t-2 border-ink pt-3">
-              <p className="font-display text-sm font-semibold text-vermilion">{n}</p>
-              <p className="mt-1 font-display text-lg font-semibold">{t}</p>
-              <p className="mt-1 text-sm leading-relaxed text-ink-2">{d}</p>
+            <div key={n} className={`border-t-2 border-ink pt-3 ${n === '01' ? 'grid gap-5 sm:grid-cols-2 sm:items-center' : ''}`}>
+              <div>
+                <p className="font-display text-sm font-semibold text-vermilion">{n}</p>
+                <p className="mt-1 font-display text-lg font-semibold">{t}</p>
+                <p className="mt-1 text-sm leading-relaxed text-ink-2">{d}</p>
+              </div>
+              {n === '01' && (
+                <div className="h-56 overflow-hidden rounded-2xl border border-line shadow-sm" role="region" aria-label={`${previewTour.title} route preview map`}>
+                  <ArtMap
+                    mode="tour"
+                    points={previewStops.map(({ art }, index) => ({ art, label: String(index + 1) }))}
+                    path={previewStops.map(({ art }) => [art.lat, art.lon])}
+                    accent={previewTour.accent}
+                    fitKey="home-waterfront-route-preview"
+                    onSelect={() => navigate({ view: 'tour', tourId: previewTour.id })}
+                  />
+                </div>
+              )}
             </div>
           ))}
         </section>

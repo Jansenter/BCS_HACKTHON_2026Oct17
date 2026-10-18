@@ -43,7 +43,7 @@ export default function TourView({ tour, artId }: { tour: Tour; artId?: number }
   const header = (
     <div className="border-b border-line px-4 pb-3 pt-3">
       <div className="flex items-center gap-2">
-        <button onClick={() => navigate({ view: 'home' })} className="-ml-2 grid h-10 w-10 place-items-center rounded-full hover:bg-paper-2" aria-label="Back to tours">
+        <button onClick={() => navigate({ view: 'explore' })} className="-ml-2 grid h-10 w-10 place-items-center rounded-full hover:bg-paper-2" aria-label="Back to Explore">
           <BackIcon />
         </button>
         <div className="min-w-0 flex-1">
