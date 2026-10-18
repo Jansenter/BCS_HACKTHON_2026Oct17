@@ -39,6 +39,25 @@ body {
   background-size: 4px 4px;
 }
 
+.home-dark {
+  --color-paper: #171916;
+  --color-paper-2: #252923;
+  --color-card: #20231f;
+  --color-ink: #f1ede5;
+  --color-ink-2: #c5c0b7;
+  --color-ink-3: #a39d92;
+  --color-line: #3b4039;
+  --color-vermilion: #ff8467;
+  --color-vermilion-dark: #f06a4e;
+  --color-sea: #55b7ac;
+  --color-ochre: #e49a6f;
+  --color-good: #79c994;
+  color-scheme: dark;
+  background-color: var(--color-paper);
+  background-image: radial-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px);
+  color: var(--color-ink);
+}
+
 :focus-visible {
   outline: 3px solid var(--color-vermilion);
   outline-offset: 2px;
@@ -122,6 +141,19 @@ body {
   animation: rise 0.35s ease both;
 }
 
+@keyframes home-cta-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.home-cta-fade {
+  display: inline-block;
+  animation: home-cta-fade 0.9s ease 0.65s both;
+}
+
 @keyframes pop {
   0% {
     transform: scale(0.6);
@@ -142,6 +174,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .rise,
   .pop {
+    animation: none;
+  }
+  .home-cta-fade {
     animation: none;
   }
 }

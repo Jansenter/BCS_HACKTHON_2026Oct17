@@ -2,34 +2,47 @@ import { TOURS } from '../data/tours';
 import { ARTWORKS, tourStops } from '../lib/data';
 import { formatDistance, walkingEstimate } from '../lib/geo';
 import { href } from '../lib/router';
-import { useVisited } from '../lib/storage';
+import { usePersistentState, useVisited } from '../lib/storage';
 import ArtCover from './ArtCover';
 import CommunityHub from './CommunityHub';
 
 export default function Home() {
   const { isVisited, visited } = useVisited();
+  const [darkMode, setDarkMode] = usePersistentState('artwalk:home-dark-mode', false);
   const totalVisited = ARTWORKS.filter((a) => visited.includes(a.id)).length;
 
   return (
-    <div className="grain min-h-full">
+    <div className={`grain min-h-full ${darkMode ? 'home-dark' : ''}`}>
       <div className="mx-auto max-w-5xl px-5 pb-16 pt-5 sm:px-8">
         <nav className="flex items-center justify-between">
           <a href="#/" className="flex items-center gap-2" aria-label="ArtWalk home">
             <img src="/favicon.svg" alt="" width={30} height={30} />
             <span className="font-display text-xl font-semibold tracking-tight">ArtWalk</span>
           </a>
-          <span className="rounded-full border border-line bg-card px-3 py-1.5 text-xs font-semibold">📍 Downtown Vancouver</span>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full border border-line bg-card px-3 py-1.5 text-xs font-semibold">📍 Downtown Vancouver</span>
+            <button
+              type="button"
+              onClick={() => setDarkMode((enabled) => !enabled)}
+              aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-pressed={darkMode}
+              className="grid h-10 w-10 place-items-center rounded-full border border-line bg-card text-lg transition hover:bg-paper-2"
+              title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              <span aria-hidden="true">{darkMode ? '☀' : '☾'}</span>
+            </button>
+          </div>
         </nav>
 
-        <header className="rise pb-8 pt-10 sm:pt-14">
+        <header className="rise pb-8 pt-10 text-center sm:pt-14">
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-vermilion">Your personal city art storyteller</p>
-          <h1 className="max-w-3xl font-display text-[44px] font-semibold leading-[1.02] tracking-tight sm:text-[68px]">
-            Every corner has a story. <span className="italic text-ink-2">Go find it.</span>
+          <h1 className="mx-auto max-w-3xl font-display text-[44px] font-semibold leading-[1.02] tracking-tight sm:text-[68px]">
+            Every corner has a story. <span className="home-cta-fade italic text-ink-2">Go find it.</span>
           </h1>
-          <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-ink-2">
+          <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-ink-2">
             Pick a themed walk, listen to the story behind each artwork as you arrive, and look closer with small observation challenges along the way.
           </p>
-          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-2">
+          <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-ink-2">
             <span>
               <strong className="font-display text-lg text-ink">{ARTWORKS.length}</strong> public artworks
             </span>
@@ -46,7 +59,7 @@ export default function Home() {
           <h2 id="walks" className="mb-4 font-display text-2xl font-semibold">
             Choose a walk
           </h2>
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5">
             {TOURS.map((tour, ti) => {
               const stops = tourStops(tour);
               const km = walkingEstimate(stops.map((s) => s.art));
@@ -75,8 +88,24 @@ export default function Home() {
                         ⏱ ~{tour.minutes} min
                       </span>
                       <span className="rounded-full bg-paper-2 px-2.5 py-1">{formatDistance(km)}</span>
-                      <span className="rounded-full bg-paper-2 px-2.5 py-1">{stops.length} stops</span>
                       <span className="rounded-full bg-paper-2 px-2.5 py-1">🎧 audio</span>
+                    </div>
+                    <div
+                      className="relative mt-5 flex items-center justify-between px-1"
+                      role="img"
+                      aria-label={`${stops.length} stops along this walk`}
+                      style={{ color: tour.accent }}
+                    >
+                      <span className="absolute inset-x-1 top-1/2 h-0.5 -translate-y-1/2" style={{ background: `${tour.accent}55` }} aria-hidden="true" />
+                      {stops.map(({ art }, stopIndex) => (
+                        <span
+                          key={art.id}
+                          className="relative z-10 h-3.5 w-3.5 rounded-full border-2 border-card shadow-[0_0_0_2px_var(--color-card)]"
+                          style={{ background: isVisited(art.id) ? tour.accent : 'var(--color-paper-2)', borderColor: tour.accent }}
+                          title={`Stop ${stopIndex + 1}: ${art.title}`}
+                          aria-hidden="true"
+                        />
+                      ))}
                     </div>
                     <div className="mt-auto pt-5">
                       {done > 0 && (
