@@ -17,14 +17,14 @@ const PALETTES: Record<string, [string, string, string, string]> = {
 };
 
 const ARTWORK_PHOTOS: Record<number, string> = {
-  24: '/images/angel-of-victory-cordova-chimp-photo-club.jpg',
-  392: '/images/slidingedge.webp',
-  404: '/images/lightshed.jpeg',
-  438: '/images/drop.webp',
-  521: '/images/Digital_Orca_Vancouver.jpg',
-  555: '/images/nike.JPG',
-  559: '/images/gurunanak.jpg',
-  755: '/images/caption.jpg',
+  24: 'images/angel-of-victory-cordova-chimp-photo-club.jpg',
+  392: 'images/slidingedge.webp',
+  404: 'images/lightshed.jpeg',
+  438: 'images/drop.webp',
+  521: 'images/Digital_Orca_Vancouver.jpg',
+  555: 'images/nike.JPG',
+  559: 'images/gurunanak.jpg',
+  755: 'images/caption.jpg',
 };
 
 function rng(seed: number) {
@@ -38,7 +38,8 @@ function rng(seed: number) {
 }
 
 export default function ArtCover({ art, className = '', compact = false }: { art: Artwork; className?: string; compact?: boolean }) {
-  const photo = ARTWORK_PHOTOS[art.id];
+  const photoPath = ARTWORK_PHOTOS[art.id];
+  const photo = photoPath ? `${import.meta.env.BASE_URL}${photoPath}` : undefined;
   const cat = categoryOf(art.type);
   const [a, b, c, bg] = PALETTES[cat] ?? PALETTES.sculpture;
   const r = rng(art.id);

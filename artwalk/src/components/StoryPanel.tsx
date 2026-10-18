@@ -108,6 +108,7 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
               className="parallax-photo h-44 sm:h-52"
               role="img"
               aria-label="Chrome steel ring sculptures of A Parallax View outside Waterfront Station."
+              style={{ backgroundImage: `linear-gradient(to top, rgb(28 26 23 / 0.24), transparent 55%), url('${import.meta.env.BASE_URL}images/caption.jpg')` }}
             />
           ) : (
             <ArtCover art={art} className="h-44 sm:h-52" />
