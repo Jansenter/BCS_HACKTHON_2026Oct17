@@ -30,6 +30,11 @@ const translations: Record<string, [string, string]> = {
   'A local demo profile personalizes suggestions and keeps your preferences on this device.':['本地演示资料可个性化推荐，并将偏好保存在此设备上。','Un profil de démonstration local personnalise les suggestions et conserve vos préférences sur cet appareil.'],
   'Prefer step-free paths':['优先选择无台阶路线','Privilégier les itinéraires sans marche'], 'Avoid stairs':['避开楼梯','Éviter les escaliers'], 'Prefer quieter, less crowded stops':['优先选择安静、人少的地点','Privilégier les arrêts calmes et peu fréquentés'],
   'Share a public artwork or a correction for the team to review.':['分享公共艺术作品或更正信息，供团队审核。','Partagez une œuvre publique ou une correction à examiner par l’équipe.'], 'Artwork name':['作品名称','Nom de l’œuvre'], 'Location':['地点','Lieu'], 'Details':['详情','Détails'],
+  'Choose a walk':['选择一条路线','Choisissez une promenade'], 'public artworks':['件公共艺术作品','œuvres d’art public'], 'curated walks':['条精选路线','promenades conçues'], 'artworks visited by you':['件您已参观的作品','œuvres que vous avez visitées'],
+  'Pick a walk':['选择一条路线','Choisissez une promenade'], 'Two curated routes through Downtown, each under an hour.':['市中心两条精选路线，每条不到一小时。','Deux itinéraires au centre-ville, chacun de moins d’une heure.'],
+  'Listen as you arrive':['到达时聆听','Écoutez en arrivant'], 'Every stop has a narrated story with a readable transcript.':['每一站都有语音讲述和可阅读的文字稿。','Chaque arrêt propose un récit audio et sa transcription.'],
+  'Spot details, answer a question, and collect each stop.':['发现细节、回答问题，并记录每一站。','Repérez des détails, répondez à une question et validez chaque arrêt.'], 'How ArtWalk works':['ArtWalk 使用指南','Comment fonctionne ArtWalk'],
+  'All {count} artworks on one map — filter, search, and find what’s nearest to you.':['全部 {count} 件作品尽在一张地图上，可筛选、搜索并查找离您最近的作品。','Les {count} œuvres sur une carte : filtrez, recherchez et trouvez l’œuvre la plus proche de vous.'],
 };
 
 const Context = createContext<{ language: Language; setLanguage: (language: Language) => void; t: (text: string) => string }>({ language: 'en', setLanguage: () => {}, t: (text) => text });

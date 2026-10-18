@@ -108,13 +108,13 @@ export default function Home() {
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-ink-2">
             <span>
-              <strong className="font-display text-lg text-ink">{ARTWORKS.length}</strong> public artworks
+              <strong className="font-display text-lg text-ink">{ARTWORKS.length}</strong> {t('public artworks')}
             </span>
             <span>
-              <strong className="font-display text-lg text-ink">{TOURS.length}</strong> curated walks
+              <strong className="font-display text-lg text-ink">{TOURS.length}</strong> {t('curated walks')}
             </span>
             <span>
-              <strong className="font-display text-lg text-ink">{totalVisited}</strong> visited by you
+              <strong className="font-display text-lg text-ink">{totalVisited}</strong> {t('artworks visited by you')}
             </span>
           </div>
         </header>
@@ -130,7 +130,9 @@ export default function Home() {
             </span>
             <span className="flex-1">
               <span className="block font-display text-xl font-semibold">{t('Wander freely')}</span>
-              <span className="wander-description block text-sm text-ink-2">All {ARTWORKS.length} artworks on one map — filter, search, and find what’s nearest to you.</span>
+              <span className="wander-description block text-sm text-ink-2">
+                {t('All {count} artworks on one map — filter, search, and find what’s nearest to you.').replace('{count}', String(ARTWORKS.length))}
+              </span>
             </span>
             <span className="text-xl" aria-hidden>
               →
@@ -146,7 +148,7 @@ export default function Home() {
           aria-labelledby="walks"
         >
           <h2 id="walks" className="mb-4 font-display text-3xl font-semibold sm:text-4xl">
-            Choose a walk
+            {t('Choose a walk')}
           </h2>
           <div className="grid grid-cols-1 gap-5">
             {TOURS.map((tour, ti) => {
@@ -231,20 +233,20 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-7 grid grid-cols-1 gap-6" aria-label="How ArtWalk works">
+        <section className="mt-7 grid grid-cols-1 gap-6" aria-label={t('How ArtWalk works')}>
           {[
             ['01', 'Pick a walk', 'Two curated routes through Downtown, each under an hour.'],
             ['02', 'Listen as you arrive', 'Every stop has a narrated story with a readable transcript.'],
             ['03', 'Look closer', 'Spot details, answer a question, and collect each stop.'],
-          ].map(([n, t, d]) => (
+          ].map(([n, title, description]) => (
             <div
               key={n}
               className={`grid min-h-[82svh] grid-cols-2 content-center items-center gap-0 pt-3 sm:gap-1 lg:justify-center ${n === '02' ? 'lg:grid-cols-[24rem_28rem]' : 'lg:grid-cols-[28rem_24rem]'}`}
             >
               <div className={n === '02' ? 'order-2 w-full max-w-[19rem] justify-self-end' : ''}>
                 <p className="font-display text-sm font-semibold text-vermilion">{n}</p>
-                <p className="mt-1 font-display text-xl font-semibold sm:text-2xl">{t}</p>
-                <p className="mt-2 max-w-[19rem] text-base leading-relaxed text-ink-2 sm:text-lg">{d}</p>
+                <p className="mt-1 font-display text-xl font-semibold sm:text-2xl">{t(title)}</p>
+                <p className="mt-2 max-w-[19rem] text-base leading-relaxed text-ink-2 sm:text-lg">{t(description)}</p>
               </div>
               {n === '01' && (
                 <div className="h-56 w-full max-w-96 justify-self-end overflow-hidden rounded-2xl border border-line shadow-sm" role="region" aria-label={`${previewTour.title} route preview map`}>
