@@ -1,0 +1,352 @@
+{
+  "note": "Verified subset only. Missing evidence means unclassified. BIPOC includes Indigenous artists; group works match when at least one artist is documented. City biography excerpts checked against the public-art-artists export. No identity inferred from names, appearance, birthplace or artwork type.",
+  "artistEvidence": [
+    {
+      "artistId": "10",
+      "name": "Wade Baker",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=10",
+      "evidence": "Wade Baker is a member of the Squamish First Nation."
+    },
+    {
+      "artistId": "26",
+      "name": "Doug Cranmer",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=26",
+      "evidence": "Cranmer is from the 'Namgis First Nation"
+    },
+    {
+      "artistId": "81",
+      "name": "Charles James",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=81",
+      "evidence": "Kwakwaka'wakw from the Killer Whale clan."
+    },
+    {
+      "artistId": "111",
+      "name": "Ellen Neel",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=111",
+      "evidence": "A Kwakwaka'wakw, Neel was the granddaughter of carver Charlie James."
+    },
+    {
+      "artistId": "122",
+      "name": "Bill Reid",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=122",
+      "evidence": "His mother was Haida and his father was of European descent."
+    },
+    {
+      "artistId": "300",
+      "name": "Susan Point",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=300",
+      "evidence": "Susan Point is a Musqueam artist"
+    },
+    {
+      "artistId": "328",
+      "name": "Zac George",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=328",
+      "evidence": "Zac George is a member of the Tsleil-Waututh Nation."
+    },
+    {
+      "artistId": "336",
+      "name": "Aaron Nelson-Moody",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=336",
+      "evidence": "is a Squamish and Scottish artist"
+    },
+    {
+      "artistId": "337",
+      "name": "Brent Sparrow",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=337",
+      "evidence": "Brent Sparrow is a member of the Musqueam First Nation"
+    },
+    {
+      "artistId": "384",
+      "name": "Jeska Slater",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=384",
+      "evidence": "Jeska's Cree lineage is through her mother's side"
+    },
+    {
+      "artistId": "396",
+      "name": "Sonny Assu",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=396",
+      "evidence": "away from his ancestral home in Cape Mudge and Kwakwaka'wakw culture"
+    },
+    {
+      "artistId": "408",
+      "name": "Ray Natraoro",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=408",
+      "evidence": "Ray Natraoro is a member of the Squamish First Nation."
+    },
+    {
+      "artistId": "415",
+      "name": "Dana Claxton",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=415",
+      "evidence": "She is a member of Wood Mountain Lakota First Nations"
+    },
+    {
+      "artistId": "425",
+      "name": "Thomas Cannell",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=425",
+      "evidence": "Thomas Cannell is a Coast Salish artist"
+    },
+    {
+      "artistId": "441",
+      "name": "Derek Edenshaw",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=441",
+      "evidence": "Haida"
+    },
+    {
+      "artistId": "572",
+      "name": "Larissa Healy",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=572",
+      "evidence": "is an Ojibway artist"
+    },
+    {
+      "artistId": "573",
+      "name": "Shadae Johnson",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=573",
+      "evidence": "Shadae Johnson is from the Tsartlip Village, Okanagan, Northern Dene, Han, and Northern Tutchone and Wolf Clan."
+    },
+    {
+      "artistId": "606",
+      "name": "Krista Point",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=606",
+      "evidence": "Krista Point is a member of the Musqueam Nation"
+    },
+    {
+      "artistId": "709",
+      "name": "Chief Janice George",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=709",
+      "evidence": "a member of the Sḵwx̱wú7mesh (Squamish) Nation"
+    },
+    {
+      "artistId": "710",
+      "name": "Angela George",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=710",
+      "evidence": "her late mother and Squamish ancestry"
+    },
+    {
+      "artistId": "759",
+      "name": "Richard Campbell",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=759",
+      "evidence": "is a respected Musqueam master carver"
+    },
+    {
+      "artistId": "378",
+      "name": "Dalannah Gail Bowen",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=378",
+      "evidence": "Cherokee/African-Canadian"
+    },
+    {
+      "artistId": "388",
+      "name": "Yue Minjun",
+      "tags": [
+        "bipoc"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=388",
+      "evidence": "Yue Minjun is a contemporary Chinese artist"
+    },
+    {
+      "artistId": "642",
+      "name": "Jag Nagra",
+      "tags": [
+        "bipoc"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=642",
+      "evidence": "South Asian artist"
+    },
+    {
+      "artistId": "651",
+      "name": "Shion Skye Carter",
+      "tags": [
+        "bipoc"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=651",
+      "evidence": "Shion Skye Carter is a Japanese-Canadian dance artist."
+    },
+    {
+      "artistId": "665",
+      "name": "Dona Nabata",
+      "tags": [
+        "bipoc"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=665",
+      "evidence": "As a third-generation Japanese-Canadian"
+    },
+    {
+      "artistId": "725",
+      "name": "Reggie Harrold",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=725",
+      "evidence": "Reggie Harrold is a contemporary Indigenous artist"
+    },
+    {
+      "artistId": "728",
+      "name": "Kai Liu",
+      "tags": [
+        "bipoc"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=728",
+      "evidence": "Kai Liu is a Chinese-Canadian artist"
+    },
+    {
+      "artistId": "776",
+      "name": "Taryn Walker",
+      "tags": [
+        "bipoc",
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtistDetail.aspx?FromArtistIndex=False&ArtistId=776",
+      "evidence": "mixed-Indigenous artist"
+    }
+  ],
+  "artworkEvidence": [
+    {
+      "artworkId": 741,
+      "tags": [
+        "indigenous-artwork",
+        "bipoc"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtworkDetail.aspx?ArtworkId=741",
+      "evidence": "The City of Vancouver, as part of its Canada 150+ program, commissioned a series of six paint and print murals created by Indigenous artists and artist teams"
+    },
+    {
+      "artworkId": 742,
+      "tags": [
+        "indigenous-artwork",
+        "bipoc"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtworkDetail.aspx?ArtworkId=742",
+      "evidence": "The City of Vancouver, as part of its Canada 150+ program, commissioned a series of six paint and print murals created by Indigenous artists and artist teams"
+    },
+    {
+      "artworkId": 783,
+      "tags": [
+        "indigenous-artwork",
+        "bipoc"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtworkDetail.aspx?ArtworkId=783",
+      "evidence": "The artwork is part of a series of Indigenous artwork, commissioned through the City’s Indigenous Artist Call 2018."
+    },
+    {
+      "artworkId": 814,
+      "tags": [
+        "indigenous-artwork",
+        "bipoc"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtworkDetail.aspx?ArtworkId=814",
+      "evidence": "This artwork is part of a series of Indigenous artwork, commissioned through the City’s Indigenous Artist Call 2019"
+    },
+    {
+      "artworkId": 824,
+      "tags": [
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtworkDetail.aspx?ArtworkId=824",
+      "evidence": "This two-dimensional crosswalk design commission celebrates the vibrancy of Musqueam artistic traditions and the community today by providing further recognition of Musqueam history and territory.The highly visible location is in proximity to c̓əsnaʔəm, Musqueam’s ancient village and cemetery, as well as the Fraser River."
+    },
+    {
+      "artworkId": 581,
+      "tags": [
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtworkDetail.aspx?ArtworkId=581",
+      "evidence": "This mural is a series of 12 panels that celebrates the Mi'kmag culture from the East Coast of Canada that features symbols and images from petroglyphs."
+    },
+    {
+      "artworkId": 915,
+      "tags": [
+        "indigenous-artwork"
+      ],
+      "source": "https://covapp.vancouver.ca/PublicArtRegistry/ArtworkDetail.aspx?ArtworkId=915",
+      "evidence": "Blanketing The City IV: Cathedral Square is the fourth installment of a mural series initiated by Debra Sparrow in 2018 in collaboration with the Vancouver Mural Festival"
+    }
+  ]
+}

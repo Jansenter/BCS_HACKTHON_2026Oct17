@@ -63,3 +63,16 @@ export function useChallenges() {
   const record = (key: string, correct: boolean) => setAnswers((a) => ({ ...a, [key]: correct }));
   return { answers, record };
 }
+
+/** Personal likes persist on this browser; public totals need a shared backend. */
+export function useLikes() {
+  const [stored, setLikes] = usePersistentState<number[]>('artwalk:likes', []);
+  const likes = Array.isArray(stored) ? stored.filter((id) => Number.isSafeInteger(id)) : [];
+  const isLiked = (id: number) => likes.includes(id);
+  const toggleLike = (id: number, visited: boolean) => setLikes((value) => {
+    const current = Array.isArray(value) ? value.filter((item) => Number.isSafeInteger(item)) : [];
+    if (current.includes(id)) return current.filter((item) => item !== id);
+    return visited ? [...current, id] : current;
+  });
+  return { likes, isLiked, toggleLike };
+}

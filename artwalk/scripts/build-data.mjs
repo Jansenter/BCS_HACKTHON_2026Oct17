@@ -76,7 +76,8 @@ const artworks = raw
     const ids = r.artists ?? [];
     return {
       id: r.registryid,
-      title: clean(r.title_of_work) ?? 'Untitled',
+      // Registry export has a damaged character; confirmed by artwork #808's statement and City registry.
+      title: r.registryid === 808 ? '聚 Gathering' : clean(r.title_of_work) ?? 'Untitled',
       type: r.type ?? 'Artwork',
       year: r.yearofinstallation ? Number(r.yearofinstallation) : null,
       material: clean(r.primarymaterial),

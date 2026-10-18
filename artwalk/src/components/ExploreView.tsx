@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CITY_ARTWORKS, CATEGORIES, artistCredit, artworkById, categoryOf, stopFor } from '../lib/data';
+import { ARTWORK_TAGS, matchesArtworkTags, type ArtworkTag } from '../lib/artwork-tags';
 import { distance, formatDistance } from '../lib/geo';
 import { useGeolocation } from '../lib/route';
 import { NEIGHBOURHOODS, containsArtwork, neighbourhoodColor } from '../lib/neighbourhoods';
-import { navigate } from '../lib/router';
+import { href, navigate } from '../lib/router';
 import { useVisited } from '../lib/storage';
+import type { NearbySelection } from '../lib/nearby';
 import ArtMap, { categoryColor } from './ArtMap';
 import Shell, { BackIcon, IconButton, LocateIcon } from './Shell';
 import StoryPanel from './StoryPanel';
@@ -16,7 +18,9 @@ export default function ExploreView({ artId }: { artId?: number }) {
   const area = NEIGHBOURHOODS.find((n) => n.properties.name === areaName);
   const areaWorks = useMemo(() => CITY_ARTWORKS.filter((a) => !area || containsArtwork(area, a)), [area]);
   const [query, setQuery] = useState('');
+  const [tags, setTags] = useState<ArtworkTag[]>([]);
   const [cats, setCats] = useState<string[]>([]);
+  const [nearby, setNearby] = useState<NearbySelection>({ artworkId: 0, places: [] });
   const [locate, setLocate] = useState(false);
   const { pos: me, error: geoError } = useGeolocation(locate);
   const { isVisited, toggle, visited } = useVisited();
@@ -24,6 +28,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     const list = areaWorks.filter((a) => {
+      if (!matchesArtworkTags(a, tags)) return false;
       if (cats.length && !cats.includes(categoryOf(a.type))) return false;
       if (!q) return true;
       return [a.title, a.site, a.address, a.type, a.material, ...a.artists, String(a.year ?? '')]
@@ -31,7 +36,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
         .some((s) => s!.toLowerCase().includes(q));
     });
     return me ? [...list].sort((a, b) => distance(me, a) - distance(me, b)) : [...list].sort((a, b) => a.title.localeCompare(b.title));
-  }, [query, cats, me, areaWorks]);
+  }, [query, cats, tags, me, areaWorks]);
 
   const open = artId ? artworkById(artId) : undefined;
   const ctx = open ? stopFor(open.id) : undefined;
@@ -52,6 +57,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
       setAreaName(local.properties.name);
       setQuery('');
       setCats([]);
+      setTags([]);
       navigate({ view: 'explore' });
       setAreaError('');
     } else setAreaError('Your location is outside the available neighbourhoods. Choose an area below.');
@@ -68,6 +74,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-vermilion">Art map</p>
           <h1 className="font-display text-[22px] font-semibold leading-tight">Explore {areaName || 'Vancouver'}</h1>
         </div>
+        <a className="rounded-full border border-line px-3 py-2 text-xs font-semibold" href={href({ view: 'profile' })}>My ArtWalk</a>
         <p className="text-right text-xs text-ink-3">
           <span className="font-display text-lg font-semibold text-ink">{visitedHere}</span>/{areaWorks.length}
           <br />
@@ -106,6 +113,17 @@ export default function ExploreView({ artId }: { artId?: number }) {
         />
       </label>
       <div className="scrollbar-none -mx-4 mt-3 flex gap-2 overflow-x-auto px-4">
+        {ARTWORK_TAGS.map((tag) => {
+          const on = tags.includes(tag.key);
+          return (
+            <button key={tag.key} onClick={() => setTags((current) => on ? current.filter((key) => key !== tag.key) : [...current, tag.key])}
+              aria-pressed={on} title="Verified City records only; coverage is incomplete"
+              className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition ${on ? 'border-ink bg-ink text-paper' : 'border-line bg-card'}`}>
+              <span className="h-2.5 w-2.5 rounded-full" style={{ background: tag.color }} aria-hidden />
+              {tag.label}
+            </button>
+          );
+        })}
         {CATEGORIES.map((c) => {
           const on = cats.includes(c.key);
           const color = categoryColor(c.types[0]);
@@ -122,6 +140,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
           );
         })}
       </div>
+      {tags.length > 0 && <p className="mt-2 text-xs text-ink-3">Verified City records only; coverage is incomplete. BIPOC includes Indigenous artists. Selected tags also apply to the chosen artwork types.</p>}
     </div>
   );
 
@@ -156,11 +175,13 @@ export default function ExploreView({ artId }: { artId?: number }) {
   const map = (
     <>
       <ArtMap
+        nearby={nearby.artworkId === artId ? nearby : undefined}
+        onNearbySelect={(id) => setNearby((current) => ({ ...current, selectedId: id }))}
         mode="explore"
         boundary={area}
         areas={NEIGHBOURHOODS}
         onAreaSelect={selectArea}
-        fitKey={`explore-${areaName}-${cats.join(',')}-${query}`}
+        fitKey={`explore-${areaName}-${cats.join(',')}-${tags.join(',')}-${query}`}
         points={filtered.map((art) => ({ art, visited: isVisited(art.id) }))}
         activeId={open?.id}
         focusId={open?.id}
@@ -178,6 +199,8 @@ export default function ExploreView({ artId }: { artId?: number }) {
 
   const story = open && (
     <StoryPanel
+      nearby={nearby.artworkId === artId ? nearby : undefined}
+      onNearbyChange={setNearby}
       key={open.id}
       art={open}
       stop={ctx?.stop}

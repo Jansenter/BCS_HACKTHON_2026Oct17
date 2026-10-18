@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import L from 'leaflet';
+import { NearbyMarkers, NearbyCamera } from './NearbyMap';
+import type { NearbySelection } from '../lib/nearby';
 import { GeoJSON, MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from 'react-leaflet';
 import { categoryOf, type Artwork } from '../lib/data';
 import { neighbourhoodColor, type Neighbourhood } from '../lib/neighbourhoods';
@@ -104,7 +106,11 @@ export default function ArtMap({
   boundary,
   areas,
   onAreaSelect,
+  nearby,
+  onNearbySelect,
 }: {
+  nearby?: NearbySelection;
+  onNearbySelect?: (id: string) => void;
   points: MapPoint[];
   mode: 'tour' | 'explore';
   activeId?: number;
@@ -182,6 +188,10 @@ export default function ArtMap({
         </Marker>
       ))}
 
+      {nearby && nearby.places.length > 0 && <>
+        <NearbyMarkers places={nearby.places} selectedId={nearby.selectedId} onSelect={(id) => onNearbySelect?.(id)} />
+        {focus && <NearbyCamera origin={focus} places={nearby.places} selectedId={nearby.selectedId} />}
+      </>}
       {me && <Marker position={[me.lat, me.lon]} icon={meIcon} interactive={false} />}
     </MapContainer>
   );

@@ -9,6 +9,9 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "start": "node server/index.mjs",
+    "test:nearby": "node --test server/nearby.test.mjs",
+    "test:profile": "node scripts/test-profile.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
