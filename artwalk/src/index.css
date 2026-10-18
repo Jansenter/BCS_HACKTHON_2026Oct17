@@ -53,6 +53,20 @@ body {
   font-size: 10px;
 }
 
+.parallax-photo {
+  background-image: linear-gradient(to top, rgb(28 26 23 / 0.24), transparent 55%), url('/images/caption.jpg');
+  background-position: center 54%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .parallax-photo {
+    background-attachment: scroll;
+  }
+}
+
 /* Numbered stop pins */
 .aw-pin {
   display: grid;

@@ -103,7 +103,15 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
 
       <div className="flex-1 overflow-y-auto overscroll-contain">
         <div className="relative">
-          <ArtCover art={art} className="h-44 sm:h-52" />
+          {art.id === 755 ? (
+            <div
+              className="parallax-photo h-44 sm:h-52"
+              role="img"
+              aria-label="Chrome steel ring sculptures of A Parallax View outside Waterfront Station."
+            />
+          ) : (
+            <ArtCover art={art} className="h-44 sm:h-52" />
+          )}
           <a
             href={art.url}
             target="_blank"
@@ -265,7 +273,11 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
               <a href={art.url} target="_blank" rel="noreferrer" className="underline">
                 City of Vancouver Public Art Registry
               </a>
-              {art.photoCredit && <> · Registry photo credit: {art.photoCredit}</>}. Contains information licensed under the Open Government Licence – Vancouver.
+              {art.id === 24 ? (
+                <>
+                  {' '}· Photo: <a href="https://www.heritagesitefinder.ca/location/angel-of-victory-cpr-station-bronze-war-memorial/" target="_blank" rel="noreferrer" className="underline">Chimp Photo Club</a>
+                </>
+              ) : art.photoCredit ? <> · Registry photo credit: {art.photoCredit}</> : null}. Contains information licensed under the Open Government Licence – Vancouver.
             </p>
           </section>
         </div>

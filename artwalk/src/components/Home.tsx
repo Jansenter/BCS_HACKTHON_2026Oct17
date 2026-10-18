@@ -4,6 +4,7 @@ import { formatDistance, walkingEstimate } from '../lib/geo';
 import { href } from '../lib/router';
 import { useVisited } from '../lib/storage';
 import ArtCover from './ArtCover';
+import CommunityHub from './CommunityHub';
 
 export default function Home() {
   const { isVisited, visited } = useVisited();
@@ -128,6 +129,8 @@ export default function Home() {
             </div>
           ))}
         </section>
+
+        <CommunityHub />
 
         <footer className="mt-16 border-t border-line pt-5 text-xs leading-relaxed text-ink-3">
           Artwork data from the{' '}

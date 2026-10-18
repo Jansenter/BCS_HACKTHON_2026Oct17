@@ -16,6 +16,17 @@ const PALETTES: Record<string, [string, string, string, string]> = {
   media: ['#272a5c', '#6a5acd', '#f1b6d0', '#efeef6'],
 };
 
+const ARTWORK_PHOTOS: Record<number, string> = {
+  24: '/images/angel-of-victory-cordova-chimp-photo-club.jpg',
+  392: '/images/slidingedge.webp',
+  404: '/images/lightshed.jpeg',
+  438: '/images/drop.webp',
+  521: '/images/Digital_Orca_Vancouver.jpg',
+  555: '/images/nike.JPG',
+  559: '/images/gurunanak.jpg',
+  755: '/images/caption.jpg',
+};
+
 function rng(seed: number) {
   let t = Math.imul(seed ^ 0x9e3779b9, 0x85ebca6b) >>> 0; // mulberry32 with a mixed seed
   return () => {
@@ -27,6 +38,7 @@ function rng(seed: number) {
 }
 
 export default function ArtCover({ art, className = '', compact = false }: { art: Artwork; className?: string; compact?: boolean }) {
+  const photo = ARTWORK_PHOTOS[art.id];
   const cat = categoryOf(art.type);
   const [a, b, c, bg] = PALETTES[cat] ?? PALETTES.sculpture;
   const r = rng(art.id);
@@ -105,10 +117,19 @@ export default function ArtCover({ art, className = '', compact = false }: { art
 
   return (
     <div className={`relative overflow-hidden ${className}`} aria-hidden="true">
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" className="block h-full w-full">
-        <rect width={W} height={H} fill={bg} />
-        {shapes}
-      </svg>
+      {photo ? (
+        <img
+          src={photo}
+          alt=""
+          className="block h-full w-full object-cover"
+          style={{ objectPosition: art.id === 438 ? 'center 38%' : 'center' }}
+        />
+      ) : (
+        <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" className="block h-full w-full">
+          <rect width={W} height={H} fill={bg} />
+          {shapes}
+        </svg>
+      )}
       {!compact && (
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/45 to-transparent px-4 pb-3 pt-10 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/95">
           <span>{art.type}</span>
