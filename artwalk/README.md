@@ -90,3 +90,15 @@ Explore opens with all Vancouver neighbourhoods, each with a distinct boundary c
 The 22 local areas use `src/data/local-area-boundary.json`. Yaletown and Gastown use explicitly approximate exploration polygons in `src/lib/neighbourhoods.ts`, not official administrative or heritage boundaries. Small areas take precedence for location detection; Downtown remains available as the broader area.
 
 Additional in-place works are generated separately with `node scripts/build-data.mjs --city` into `src/data/city-artworks.json`. Existing `artworks.json` records take precedence by registry ID, preserving curated data and the existing photo mapping. The original data command and tours are unchanged.
+
+## Evidence-based artwork tags
+
+Explore offers **By BIPOC artists** (Black, Indigenous and people of colour) and **Indigenous Artwork** filters, separately from physical artwork types. Selected tags intersect with type, neighbourhood and search filters; both tags selected require both. Group works match BIPOC when at least one credited artist has documented identity. Indigenous Artwork covers documented Indigenous creators or explicitly described Indigenous works. Totem pole type alone is never used as identity evidence.
+
+`src/data/artwork-tag-evidence.json` stores reviewed City artist biography excerpts and artwork records with source URLs. The City artist metadata was fetched from `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/public-art-artists/exports/json`. This is a verified subset, not comprehensive demographic data. Missing records remain unclassified. Add verified evidence to expand coverage; do not infer identity from names, appearance, birthplace, or references to Indigenous territory. Artwork details expose the evidence under “Artwork tags & sources.”
+
+## Artist profiles and title corrections
+
+`src/data/artists.json` contains the City's artist names, available biographies, country, website and source links for all artist IDs used by the current artwork files. Empty names in the artwork export are filled at runtime; existing curated names are preserved. Explore search includes the resolved artist names. Artwork details show an expandable artist section. Country is displayed as a registry field and is not used to infer identity tags.
+
+To refresh from the official `public-art-artists` JSON export, run `python3 scripts/build-artists.py /path/to/public-art-artists.json`. This writes only `artists.json`. The damaged title for artwork #808 is corrected to **聚 Gathering**, credited to **Dawn Lo**, as confirmed by its City registry page and artist statement; the correction is also preserved by the artwork build script.

@@ -1,4 +1,5 @@
 import raw from '../data/artworks.json';
+import artistProfiles from '../data/artists.json';
 import cityRaw from '../data/city-artworks.json';
 import { TOURS, type Tour, type TourStop } from '../data/tours';
 
@@ -22,19 +23,36 @@ export interface Artwork {
   url: string;
 }
 
-export const ARTWORKS = raw as Artwork[];
+const artistById = new Map(artistProfiles.map((artist) => [artist.id, artist]));
+export function artistsFor(art: Artwork) {
+  return art.artistIds.flatMap((id) => {
+    const artist = artistById.get(id);
+    return artist ? [artist] : [];
+  });
+}
+function enrichArtwork(art: Artwork): Artwork {
+  return {
+    ...art,
+    artists: art.artists.length ? art.artists : artistsFor(art).map((artist) => artist.name).filter(Boolean),
+  };
+}
+export const ARTWORKS = (raw as Artwork[]).map(enrichArtwork);
 // Existing curated records take priority; never regenerate or replace them for Explore.
 export const CITY_ARTWORKS = [...new Map([
-  ...(cityRaw as Artwork[]).map((a) => [a.id, a] as const),
+  ...(cityRaw as Artwork[]).map(enrichArtwork).map((a) => [a.id, a] as const),
   ...ARTWORKS.map((a) => [a.id, a] as const),
 ]).values()];
 const byId = new Map(CITY_ARTWORKS.map((a) => [a.id, a]));
 
 export const artworkById = (id: number) => byId.get(id);
 
+const verifiedArtistNames = new Map(artistProfiles.map((entry) => [entry.id, entry.name]));
+
 /** Artist credit for display, with where it came from. */
 export function artistCredit(art: Artwork, stop?: TourStop): { name: string; source: 'registry' | 'curator' | 'unknown' } {
   if (art.artists.length) return { name: art.artists.join(' & '), source: 'registry' };
+  const verifiedNames = art.artistIds.map((id) => verifiedArtistNames.get(id));
+  if (verifiedNames.length && verifiedNames.every((name) => !!name)) return { name: verifiedNames.join(' & '), source: 'registry' };
   if (stop?.curatedArtist) return { name: stop.curatedArtist, source: 'curator' };
   const ids = art.artistIds.length ? ` (registry artist #${art.artistIds.join(', #')})` : '';
   return { name: `Artist not named in open data${ids}`, source: 'unknown' };

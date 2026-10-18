@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CITY_ARTWORKS, CATEGORIES, artistCredit, artworkById, categoryOf, stopFor } from '../lib/data';
+import { ARTWORK_TAGS, matchesArtworkTags, type ArtworkTag } from '../lib/artwork-tags';
 import { distance, formatDistance } from '../lib/geo';
 import { useGeolocation } from '../lib/route';
 import { NEIGHBOURHOODS, containsArtwork, neighbourhoodColor } from '../lib/neighbourhoods';
@@ -16,6 +17,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
   const area = NEIGHBOURHOODS.find((n) => n.properties.name === areaName);
   const areaWorks = useMemo(() => CITY_ARTWORKS.filter((a) => !area || containsArtwork(area, a)), [area]);
   const [query, setQuery] = useState('');
+  const [tags, setTags] = useState<ArtworkTag[]>([]);
   const [cats, setCats] = useState<string[]>([]);
   const [locate, setLocate] = useState(false);
   const { pos: me, error: geoError } = useGeolocation(locate);
@@ -24,6 +26,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     const list = areaWorks.filter((a) => {
+      if (!matchesArtworkTags(a, tags)) return false;
       if (cats.length && !cats.includes(categoryOf(a.type))) return false;
       if (!q) return true;
       return [a.title, a.site, a.address, a.type, a.material, ...a.artists, String(a.year ?? '')]
@@ -31,7 +34,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
         .some((s) => s!.toLowerCase().includes(q));
     });
     return me ? [...list].sort((a, b) => distance(me, a) - distance(me, b)) : [...list].sort((a, b) => a.title.localeCompare(b.title));
-  }, [query, cats, me, areaWorks]);
+  }, [query, cats, tags, me, areaWorks]);
 
   const open = artId ? artworkById(artId) : undefined;
   const ctx = open ? stopFor(open.id) : undefined;
@@ -52,6 +55,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
       setAreaName(local.properties.name);
       setQuery('');
       setCats([]);
+      setTags([]);
       navigate({ view: 'explore' });
       setAreaError('');
     } else setAreaError('Your location is outside the available neighbourhoods. Choose an area below.');
@@ -106,6 +110,17 @@ export default function ExploreView({ artId }: { artId?: number }) {
         />
       </label>
       <div className="scrollbar-none -mx-4 mt-3 flex gap-2 overflow-x-auto px-4">
+        {ARTWORK_TAGS.map((tag) => {
+          const on = tags.includes(tag.key);
+          return (
+            <button key={tag.key} onClick={() => setTags((current) => on ? current.filter((key) => key !== tag.key) : [...current, tag.key])}
+              aria-pressed={on} title="Verified City records only; coverage is incomplete"
+              className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition ${on ? 'border-ink bg-ink text-paper' : 'border-line bg-card'}`}>
+              <span className="h-2.5 w-2.5 rounded-full" style={{ background: tag.color }} aria-hidden />
+              {tag.label}
+            </button>
+          );
+        })}
         {CATEGORIES.map((c) => {
           const on = cats.includes(c.key);
           const color = categoryColor(c.types[0]);
@@ -122,6 +137,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
           );
         })}
       </div>
+      {tags.length > 0 && <p className="mt-2 text-xs text-ink-3">Verified City records only; coverage is incomplete. BIPOC includes Indigenous artists. Selected tags also apply to the chosen artwork types.</p>}
     </div>
   );
 
@@ -160,7 +176,7 @@ export default function ExploreView({ artId }: { artId?: number }) {
         boundary={area}
         areas={NEIGHBOURHOODS}
         onAreaSelect={selectArea}
-        fitKey={`explore-${areaName}-${cats.join(',')}-${query}`}
+        fitKey={`explore-${areaName}-${cats.join(',')}-${tags.join(',')}-${query}`}
         points={filtered.map((art) => ({ art, visited: isVisited(art.id) }))}
         activeId={open?.id}
         focusId={open?.id}

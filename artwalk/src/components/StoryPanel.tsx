@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { Tour, TourStop } from '../data/tours';
-import { artistCredit, type Artwork } from '../lib/data';
+import { ARTWORK_TAGS, artworkTagEvidence } from '../lib/artwork-tags';
+import { artistsFor, artistCredit, type Artwork } from '../lib/data';
 import { distance, formatDistance, osmDirections, walkMinutes, type LatLon } from '../lib/geo';
 import { speechSupported, toChunks, useNarration } from '../lib/speech';
 import ArtCover from './ArtCover';
@@ -29,6 +30,7 @@ const RATES = [0.85, 1, 1.2];
 export default function StoryPanel({ art, tour, stop, index, total, prev, next, visited, me, onToggleVisited, onClose, onGo, partOf }: Props) {
   const accent = tour?.accent ?? '#e2512f';
   const credit = artistCredit(art, stop);
+  const artists = artistsFor(art);
 
   // Narration = intro + verified description + project statement, chunked per sentence.
   const sections = useMemo(() => {
@@ -252,7 +254,37 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
             )}
           </section>
 
+          {artists.length > 0 && (
+            <section aria-labelledby={`artists-${art.id}`} className="rounded-2xl border border-line p-4 text-sm">
+              <h3 id={`artists-${art.id}`} className="font-semibold">{artists.length === 1 ? 'About the artist' : 'About the artists'}</h3>
+              {artists.map((artist) => <details key={artist.id} className="mt-3">
+                <summary className="cursor-pointer font-semibold">{artist.name}</summary>
+                {artist.biography ? <p className="mt-2 whitespace-pre-line leading-relaxed text-ink-2">{artist.biography}</p> : <p className="mt-2 text-xs text-ink-3">The City registry has no biography for this artist yet.</p>}
+                {artist.country && <p className="mt-2 text-xs text-ink-3">Country listed in registry: {artist.country}</p>}
+                <div className="mt-2 flex flex-wrap gap-4 text-xs">
+                  {artist.source && <a href={artist.source} target="_blank" rel="noopener noreferrer" className="underline">City artist profile ↗</a>}
+                  {artist.website && <a href={artist.website} target="_blank" rel="noopener noreferrer" className="underline">Artist website ↗</a>}
+                </div>
+              </details>)}
+            </section>
+          )}
+
           <Challenge key={art.id} art={art} prompt={stop?.prompt} accent={accent} />
+
+          {ARTWORK_TAGS.some((tag) => artworkTagEvidence(art, tag.key).length > 0) && (
+            <details className="rounded-2xl border border-line p-4 text-sm">
+              <summary className="cursor-pointer font-semibold">Artwork tags &amp; sources</summary>
+              {ARTWORK_TAGS.map((tag) => {
+                const sources = artworkTagEvidence(art, tag.key);
+                return sources.length > 0 && <div key={tag.key} className="mt-3">
+                  <h3 className="font-semibold">{tag.label}</h3>
+                  {sources.map((source, i) => <p key={`${source.source}-${i}`} className="mt-1 text-xs text-ink-3">
+                    {source.evidence}{' '}<a href={source.source} target="_blank" rel="noopener noreferrer" className="underline">City source ↗</a>
+                  </p>)}
+                </div>;
+              })}
+            </details>
+          )}
 
           {/* Facts + sources */}
           <section className="text-sm">
