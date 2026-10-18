@@ -35,27 +35,146 @@ body {
 
 /* Subtle paper grain so the background isn't flat */
 .grain {
-  background-image: radial-gradient(rgb(28 26 23 / 0.045) 1px, transparent 1px);
-  background-size: 4px 4px;
+  background: #f1ece0;
 }
 
-.home-dark {
-  --color-paper: #171916;
-  --color-paper-2: #252923;
-  --color-card: #20231f;
-  --color-ink: #f1ede5;
-  --color-ink-2: #c5c0b7;
-  --color-ink-3: #a39d92;
-  --color-line: #3b4039;
-  --color-vermilion: #ff8467;
-  --color-vermilion-dark: #f06a4e;
-  --color-sea: #55b7ac;
-  --color-ochre: #e49a6f;
-  --color-good: #79c994;
-  color-scheme: dark;
-  background-color: var(--color-paper);
-  background-image: radial-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px);
-  color: var(--color-ink);
+.wander-link {
+  transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease;
+}
+
+.hero-slideshow {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: calc(100svh - 3.75rem);
+  flex-direction: column;
+  padding-bottom: 1.5rem;
+  background: #18201f;
+}
+.hero-slideshow > header {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+.hero-slideshow-images {
+  position: absolute;
+  z-index: -2;
+  top: -4rem;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  overflow: hidden;
+  transform: translateX(-50%);
+}
+.hero-slideshow-images::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(10 17 19 / 72%), rgb(10 17 19 / 42%) 58%, rgb(10 17 19 / 28%));
+  content: '';
+}
+.hero-slideshow::before {
+  position: absolute;
+  z-index: -3;
+  top: -4rem;
+  right: 50%;
+  bottom: 0;
+  width: 100vw;
+  transform: translateX(50%);
+  background: #18201f;
+  content: '';
+}
+.hero-slideshow-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+.hero-slideshow-image.is-active {
+  opacity: 1;
+}
+.hero-slideshow header {
+  color: #fff;
+}
+.hero-slideshow header .text-ink,
+.hero-slideshow header .text-ink-2 {
+  color: #fff;
+}
+.hero-wander .wander-link {
+  color: #fff;
+  border-color: rgb(255 255 255 / 55%);
+  background: rgb(10 17 19 / 38%);
+  backdrop-filter: blur(8px);
+}
+.hero-wander .wander-description {
+  color: rgb(255 255 255 / 88%);
+}
+.location-badge {
+  color: #fff;
+  border-color: rgb(255 255 255 / 55%);
+  background: rgb(10 17 19 / 38%);
+  backdrop-filter: blur(8px);
+  transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease;
+}
+.location-badge:hover {
+  color: #1c1a17;
+  border-color: #fff;
+  background: #fff;
+}
+.hero-wander .wander-icon {
+  color: #1c1a17;
+  background: #fff;
+}
+.hero-wander .wander-link:hover,
+.hero-wander .wander-link:focus-visible {
+  color: #1c1a17;
+  background: #fff;
+}
+.hero-wander .wander-link:hover .wander-icon,
+.hero-wander .wander-link:focus-visible .wander-icon {
+  color: #fff;
+  background: #1c1a17;
+}
+.hero-wander .wander-link:hover .wander-description,
+.hero-wander .wander-link:focus-visible .wander-description {
+  color: #4a453e;
+}
+
+.walks-section {
+  position: relative;
+  isolation: isolate;
+}
+.walks-section::before {
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: #fff;
+  content: '';
+}
+
+.wander-link:hover,
+.wander-link:focus-visible {
+  color: #1c1a17;
+  background-color: #fffdf8;
+  border-color: #ddd4c4;
+}
+.wander-link .wander-icon {
+  transition: color 300ms ease, background-color 300ms ease;
+}
+.wander-link:hover .wander-icon,
+.wander-link:focus-visible .wander-icon {
+  color: #1c1a17;
+  background-color: #ebe4d6;
+}
+.wander-link:hover .wander-description,
+.wander-link:focus-visible .wander-description {
+  color: #4a453e;
 }
 
 .wander-link {
@@ -139,6 +258,20 @@ body {
   height: 22px;
   margin: -4px;
   outline: 3px solid rgb(226 81 47 / 0.35);
+}
+.aw-route-dot {
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border: 3px solid var(--route-color);
+  border-radius: 999px;
+  background: #fffdf8;
+  box-shadow: 0 1px 5px rgb(28 26 23 / 0.4);
+}
+.aw-route-dot.is-active {
+  width: 22px;
+  height: 22px;
+  margin: -2px;
 }
 .aw-me {
   width: 18px;
