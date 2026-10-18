@@ -24,6 +24,7 @@ export function personalTour(walk: PersonalWalk): Tour {
   return {
     id: walk.id, title: walk.title, tagline: 'Your own art walk', theme: 'Your collection, your route',
     minutes: walk.artworkIds.length * 5, accent: '#0E6E6A', accentSoft: '#D6EBE8',
+    walkScore: null, walkScoreAreas: [],
     stops: walk.artworkIds.filter((id) => artworkById(id)).map((id) => ({ id, prompt: 'What detail catches your eye in this artwork?' })),
   };
 }

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Tour } from '../data/tours';
 import { tourStops } from '../lib/data';
-import { distance, formatDistance, walkMinutes } from '../lib/geo';
+import { distance, formatDistance, walkingEstimate } from '../lib/geo';
+import { useLanguage } from '../lib/language';
 import { useGeolocation, useWalkRoute } from '../lib/route';
 import { navigate } from '../lib/router';
 import { useChallenges, useVisited } from '../lib/storage';
@@ -13,7 +14,12 @@ import Shell, { BackIcon, IconButton, LocateIcon } from './Shell';
 import StoryPanel from './StoryPanel';
 
 export default function TourView({ tour, artId }: { tour: Tour; artId?: number }) {
+  const { t, language } = useLanguage();
   const stops = useMemo(() => tourStops(tour), [tour]);
+  const estimatedMetres = walkingEstimate(stops.map(({ art }) => art));
+  const walkScoreLabel = tour.walkScore == null
+    ? 'Walk Score is not available for this personal walk.'
+    : `Estimated average of representative Walk Score ratings for ${tour.walkScoreAreas.join(', ')}; source: walkscore.com.`;
   const { isVisited, toggle, reset } = useVisited();
   const { answers } = useChallenges();
   const [nearby, setNearby] = useState<NearbySelection>({ artworkId: 0, places: [] });
@@ -65,9 +71,15 @@ export default function TourView({ tour, artId }: { tour: Tour; artId?: number }
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-paper-2" role="progressbar" aria-valuemin={0} aria-valuemax={stops.length} aria-valuenow={done} aria-label="Tour progress">
         <div className="h-full rounded-full transition-[width] duration-500" style={{ width: `${(done / stops.length) * 100}%`, background: tour.accent }} />
       </div>
-      <p className="mt-2 text-xs text-ink-3">
-        {formatDistance(route.metres)} {route.source === 'estimate' ? 'est. walk' : 'walk'} · ~{Math.max(tour.minutes, walkMinutes(route.metres))} min with stops
-      </p>
+      <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold" aria-label="Walk details">
+        <span className="rounded-full px-2.5 py-1" style={{ background: tour.accentSoft, color: tour.accent }}>⏱ ~{tour.minutes} {t('min')}</span>
+        <span className="rounded-full bg-paper-2 px-2.5 py-1" title="Estimated walking distance">{formatDistance(estimatedMetres)}</span>
+        <span className="rounded-full bg-paper-2 px-2.5 py-1">🎧 {t('audio')}</span>
+        <span className="rounded-full bg-paper-2 px-2.5 py-1">{stops.length} {language === 'zh' ? '站' : t('stops')}</span>
+        <span className="rounded-full bg-paper-2 px-2.5 py-1" title={walkScoreLabel} aria-label={`${t('Walk Score estimate')}: ${tour.walkScore ?? 'unavailable'}. ${walkScoreLabel}`}>
+          {t('Walk Score')} {tour.walkScore == null ? 'N/A' : `~${tour.walkScore}`}
+        </span>
+      </div>
     </div>
   );
 

@@ -32,9 +32,9 @@ export default function Completion({
   }, [onClose]);
 
   const share = async () => {
-    const text = `I just completed “${tour.title}” on ArtWalk — ${stops} public artworks across ${formatDistance(metres)} of Downtown Vancouver. 🎨`;
+    const text = `I just completed “${tour.title}” on Public ArtWalk - Paw — ${stops} public artworks across ${formatDistance(metres)} of Downtown Vancouver. 🎨`;
     try {
-      if (navigator.share) await navigator.share({ title: 'ArtWalk', text, url: location.origin });
+      if (navigator.share) await navigator.share({ title: 'Public ArtWalk - Paw', text, url: location.origin });
       else {
         await navigator.clipboard.writeText(`${text} ${location.origin}`);
         setCopied(true);

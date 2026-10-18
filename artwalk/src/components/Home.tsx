@@ -76,9 +76,9 @@ export default function Home() {
     <div className="grain min-h-full">
       <div className="mx-auto max-w-5xl px-5 pb-16 pt-5 sm:px-8">
         <nav className="relative z-10 flex items-center justify-between text-white">
-          <a href="#/" className="flex items-center gap-2" aria-label="ArtWalk home">
+          <a href="#/" className="flex items-center gap-2" aria-label="Public ArtWalk - Paw home">
             <img src="/favicon.svg" alt="" width={30} height={30} />
-            <span className="font-display text-xl font-semibold tracking-tight">ArtWalk</span>
+            <span className="font-display text-base font-semibold leading-tight tracking-tight sm:text-xl">Public ArtWalk - Paw</span>
           </a>
           <div className="flex items-center gap-2">
             <span className="location-badge rounded-full border px-3 py-1.5 text-xs font-semibold">📍 Downtown Vancouver</span>
@@ -272,7 +272,7 @@ export default function Home() {
           <a className="underline" href="https://opendata.vancouver.ca/explore/dataset/public-art/" target="_blank" rel="noreferrer">
             City of Vancouver Public Art Registry
           </a>
-          , licensed under the Open Government Licence – Vancouver. Map © OpenStreetMap contributors © CARTO. ArtWalk is a hackathon prototype; progress is stored only on this device.
+          , licensed under the Open Government Licence – Vancouver. Map © OpenStreetMap contributors © CARTO. Public ArtWalk - Paw is a hackathon prototype; progress is stored only on this device.
         </footer>
       </div>
     </div>

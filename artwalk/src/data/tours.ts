@@ -16,7 +16,7 @@ export interface Tour {
   theme: string;
   minutes: number;
   /** Approximate mean of representative Walk Score location ratings for neighbourhoods touched. */
-  walkScore: number;
+  walkScore: number | null;
   walkScoreAreas: string[];
   accent: string; // hex
   accentSoft: string;
