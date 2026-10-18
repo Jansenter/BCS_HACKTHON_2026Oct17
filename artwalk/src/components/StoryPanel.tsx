@@ -6,6 +6,7 @@ import { distance, formatDistance, osmDirections, walkMinutes, type LatLon } fro
 import { speechSupported, toChunks, useNarration } from '../lib/speech';
 import ArtCover from './ArtCover';
 import ArtworkSocial from './ArtworkSocial';
+import ArtworkComments from './ArtworkComments';
 import NearbyPlaces from './NearbyPlaces';
 import type { NearbySelection } from '../lib/nearby';
 import Challenge from './Challenge';
@@ -283,6 +284,7 @@ export default function StoryPanel({ art, tour, stop, index, total, prev, next, 
             </section>
           )}
 
+          <ArtworkComments key={`comments-${art.id}`} art={art} />
           <Challenge key={art.id} art={art} prompt={stop?.prompt} accent={accent} />
 
           {ARTWORK_TAGS.some((tag) => artworkTagEvidence(art, tag.key).length > 0) && (

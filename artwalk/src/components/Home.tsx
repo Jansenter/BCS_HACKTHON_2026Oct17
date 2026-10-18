@@ -143,8 +143,7 @@ export default function Home() {
         </div>
 
         <section
-          className="walks-section px-5 pt-12 text-[#1c1a17]"
-          style={{ paddingBottom: 'calc((82svh - 14rem) / 4 + 1.9375rem)' }}
+          className="walks-section px-5 pb-8 pt-12 text-[#1c1a17]"
           aria-labelledby="walks"
         >
           <h2 id="walks" className="mb-4 font-display text-3xl font-semibold sm:text-4xl">
@@ -233,7 +232,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-7 grid grid-cols-1 gap-6" aria-label={t('How ArtWalk works')}>
+        <section className="mt-7 grid grid-cols-1 gap-10 sm:gap-12" aria-label={t('How ArtWalk works')}>
           {[
             ['01', 'Pick a walk', 'Two curated routes through Downtown, each under an hour.'],
             ['02', 'Listen as you arrive', 'Every stop has a narrated story with a readable transcript.'],
@@ -241,7 +240,7 @@ export default function Home() {
           ].map(([n, title, description]) => (
             <div
               key={n}
-              className={`grid min-h-[82svh] grid-cols-2 content-center items-center gap-0 pt-3 sm:gap-1 lg:justify-center ${n === '02' ? 'lg:grid-cols-[24rem_28rem]' : 'lg:grid-cols-[28rem_24rem]'}`}
+              className={`grid grid-cols-2 items-center gap-4 py-3 sm:gap-6 lg:justify-center ${n === '02' ? 'lg:grid-cols-[24rem_28rem]' : 'lg:grid-cols-[28rem_24rem]'}`}
             >
               <div className={n === '02' ? 'order-2 w-full max-w-[19rem] justify-self-end' : ''}>
                 <p className="font-display text-sm font-semibold text-vermilion">{n}</p>
