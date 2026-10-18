@@ -58,6 +58,28 @@ body {
   color: var(--color-ink);
 }
 
+.wander-link {
+  transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease;
+}
+.wander-link:hover,
+.wander-link:focus-visible {
+  color: #1c1a17;
+  background-color: #fffdf8;
+  border-color: #ddd4c4;
+}
+.wander-link .wander-icon {
+  transition: color 300ms ease, background-color 300ms ease;
+}
+.wander-link:hover .wander-icon,
+.wander-link:focus-visible .wander-icon {
+  color: #1c1a17;
+  background-color: #ebe4d6;
+}
+.wander-link:hover .wander-description,
+.wander-link:focus-visible .wander-description {
+  color: #4a453e;
+}
+
 :focus-visible {
   outline: 3px solid var(--color-vermilion);
   outline-offset: 2px;

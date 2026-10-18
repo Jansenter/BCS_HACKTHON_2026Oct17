@@ -129,15 +129,15 @@ export default function Home() {
 
           <a
             href={href({ view: 'explore' })}
-            className="rise mt-5 flex items-center gap-4 rounded-3xl border border-dashed border-ink/25 p-5 transition hover:border-ink/50 hover:bg-card"
+            className="rise wander-link mt-5 flex items-center gap-4 rounded-3xl border border-dashed border-ink/25 p-5"
             style={{ animationDelay: '260ms' }}
           >
-            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-ink text-2xl text-paper" aria-hidden>
+            <span className="wander-icon grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-ink text-2xl text-paper" aria-hidden>
               ✦
             </span>
             <span className="flex-1">
               <span className="block font-display text-xl font-semibold">Wander freely</span>
-              <span className="block text-sm text-ink-2">All {ARTWORKS.length} artworks on one map — filter, search, and find what’s nearest to you.</span>
+              <span className="wander-description block text-sm text-ink-2">All {ARTWORKS.length} artworks on one map — filter, search, and find what’s nearest to you.</span>
             </span>
             <span className="text-xl" aria-hidden>
               →
