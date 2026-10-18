@@ -1,38 +1,55 @@
+import { useEffect, useState } from 'react';
 import { TOURS } from '../data/tours';
 import { ARTWORKS, tourStops } from '../lib/data';
 import { formatDistance, walkingEstimate } from '../lib/geo';
 import { href } from '../lib/router';
-import { usePersistentState, useVisited } from '../lib/storage';
+import { useVisited } from '../lib/storage';
 import ArtCover from './ArtCover';
 import CommunityHub from './CommunityHub';
 
+const HERO_IMAGES = [
+  { src: '/images/vancouver-lighthouse.webp', alt: 'Lighthouse on the rocky Vancouver coast' },
+  { src: '/images/gastown.webp', alt: 'Tree-lined street in historic Gastown' },
+  { src: '/images/vancouver-waterfront.webp', alt: 'Vancouver waterfront at sunset' },
+  { src: '/images/capilano-bridge.jpg', alt: 'Suspension bridge through a Vancouver forest' },
+];
+
 export default function Home() {
   const { isVisited, visited } = useVisited();
-  const [darkMode, setDarkMode] = usePersistentState('artwalk:home-dark-mode', false);
+  const [heroImageIndex, setHeroImageIndex] = useState(0);
   const totalVisited = ARTWORKS.filter((a) => visited.includes(a.id)).length;
 
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setHeroImageIndex((index) => (index + 1) % HERO_IMAGES.length);
+    }, 6000);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
-    <div className={`grain min-h-full ${darkMode ? 'home-dark' : ''}`}>
+    <div className="grain min-h-full">
       <div className="mx-auto max-w-5xl px-5 pb-16 pt-5 sm:px-8">
-        <nav className="flex items-center justify-between">
+        <nav className="relative z-10 flex items-center justify-between text-white">
           <a href="#/" className="flex items-center gap-2" aria-label="ArtWalk home">
             <img src="/favicon.svg" alt="" width={30} height={30} />
             <span className="font-display text-xl font-semibold tracking-tight">ArtWalk</span>
           </a>
           <div className="flex items-center gap-2">
-            <span className="rounded-full border border-line bg-card px-3 py-1.5 text-xs font-semibold">📍 Downtown Vancouver</span>
-            <button
-              type="button"
-              onClick={() => setDarkMode((enabled) => !enabled)}
-              aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-              aria-pressed={darkMode}
-              className="grid h-10 w-10 place-items-center rounded-full border border-line bg-card text-lg transition hover:bg-paper-2"
-              title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              <span aria-hidden="true">{darkMode ? '☀' : '☾'}</span>
-            </button>
+            <span className="location-badge rounded-full border px-3 py-1.5 text-xs font-semibold">📍 Downtown Vancouver</span>
           </div>
         </nav>
+
+        <div className="hero-slideshow">
+          <div className="hero-slideshow-images" aria-hidden="true">
+            {HERO_IMAGES.map((image, index) => (
+              <img
+                key={image.src}
+                src={image.src}
+                alt=""
+                className={`hero-slideshow-image ${index === heroImageIndex ? 'is-active' : ''}`}
+              />
+            ))}
+          </div>
 
         <header className="rise pb-8 pt-10 text-center sm:pt-14">
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-vermilion">Your personal city art storyteller</p>
@@ -55,8 +72,29 @@ export default function Home() {
           </div>
         </header>
 
-        <section aria-labelledby="walks">
-          <h2 id="walks" className="mb-4 font-display text-2xl font-semibold">
+        <section className="hero-wander" aria-label="Explore artworks">
+          <a
+            href={href({ view: 'explore' })}
+            className="rise wander-link mb-5 flex items-center gap-4 rounded-3xl border border-dashed border-ink/25 p-5"
+            style={{ animationDelay: '260ms' }}
+          >
+            <span className="wander-icon grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-ink text-2xl text-paper" aria-hidden>
+              ✦
+            </span>
+            <span className="flex-1">
+              <span className="block font-display text-xl font-semibold">Wander freely</span>
+              <span className="wander-description block text-sm text-ink-2">All {ARTWORKS.length} artworks on one map — filter, search, and find what’s nearest to you.</span>
+            </span>
+            <span className="text-xl" aria-hidden>
+              →
+            </span>
+          </a>
+        </section>
+
+        </div>
+
+        <section className="walks-section px-5 pb-5 pt-12 text-[#1c1a17]" aria-labelledby="walks">
+          <h2 id="walks" className="mb-4 font-display text-3xl font-semibold sm:text-4xl">
             Choose a walk
           </h2>
           <div className="grid grid-cols-1 gap-5">
@@ -126,26 +164,9 @@ export default function Home() {
               );
             })}
           </div>
-
-          <a
-            href={href({ view: 'explore' })}
-            className="rise mt-5 flex items-center gap-4 rounded-3xl border border-dashed border-ink/25 p-5 transition hover:border-ink/50 hover:bg-card"
-            style={{ animationDelay: '260ms' }}
-          >
-            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-ink text-2xl text-paper" aria-hidden>
-              ✦
-            </span>
-            <span className="flex-1">
-              <span className="block font-display text-xl font-semibold">Wander freely</span>
-              <span className="block text-sm text-ink-2">All {ARTWORKS.length} artworks on one map — filter, search, and find what’s nearest to you.</span>
-            </span>
-            <span className="text-xl" aria-hidden>
-              →
-            </span>
-          </a>
         </section>
 
-        <section className="mt-14 grid gap-6 sm:grid-cols-3" aria-label="How ArtWalk works">
+        <section className="mt-14 grid grid-cols-1 gap-6" aria-label="How ArtWalk works">
           {[
             ['01', 'Pick a walk', 'Two curated routes through Downtown, each under an hour.'],
             ['02', 'Listen as you arrive', 'Every stop has a narrated story with a readable transcript.'],
