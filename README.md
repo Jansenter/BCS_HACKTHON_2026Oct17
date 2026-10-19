@@ -1,4 +1,4 @@
-# Paw 🎨
+# Paw - Public Art Walk 🎨
 ### Discover the stories hidden in your city.
 
 Paw is an interactive public art discovery platform that transforms ordinary walks into meaningful cultural experiences. Explore public art around your city, follow curated walking tours based on your interests, and uncover the stories behind each artwork through accessible text and audio descriptions.
